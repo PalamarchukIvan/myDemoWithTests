@@ -135,4 +135,9 @@ public class Controller {
     public Optional<String> getAllUsersSo() {
         return employeeService.findEmails();
     }
+    @GetMapping("/users/char")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Employee> getAllUsersByNamePartly(@RequestParam String letter){
+        return employeeService.findEmployeeByPartOfTheName(letter);
+    }
 }

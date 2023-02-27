@@ -50,4 +50,5 @@ public interface EmployeeService {
 
     Optional<String> findEmails();
 
+    List<Employee> findEmployeeByPartOfTheName(String letter);
 }

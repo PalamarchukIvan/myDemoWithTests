@@ -150,4 +150,9 @@ public class EmployeeServiceBean implements EmployeeService {
                 .orElse("error?");
         return Optional.ofNullable(opt);
     }
+
+    @Override
+    public List<Employee> findEmployeeByPartOfTheName(String letter) {
+        return employeeRepository.findEmployeeByPartOfTheName(letter);
+    }
 }
