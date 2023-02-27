@@ -137,7 +137,7 @@ public class Controller {
     }
     @GetMapping("/users/char")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getAllUsersByNamePartly(@RequestParam String letter){
-        return employeeService.findEmployeeByPartOfTheName(letter);
+    public List<Employee> getAllUsersByNamePartly(@RequestParam String letters){
+        return employeeService.findEmployeeByPartOfTheName(letters);
     }
 }

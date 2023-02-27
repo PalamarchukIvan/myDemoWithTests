@@ -152,7 +152,7 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
-    public List<Employee> findEmployeeByPartOfTheName(String letter) {
-        return employeeRepository.findEmployeeByPartOfTheName(letter);
+    public List<Employee> findEmployeeByPartOfTheName(String letters) {
+        return employeeRepository.findEmployeeByPartOfTheName(letters);
     }
 }
