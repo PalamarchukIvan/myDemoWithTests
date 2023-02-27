@@ -23,6 +23,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     Page<Employee> findByCountryContaining(String country, Pageable pageable);
 
-    @Query(value = "select e from Employee e where lower(e.name) like concat('%', lower(:letter), '%') ")
-    List<Employee> findEmployeeByPartOfTheName(String letter);
+    @Query(value = "select users.* from users inner join addresses on addresses.employee_id = users.id", nativeQuery = true)
+    List<Employee> findEmployeeByPresentAddress();
 }
