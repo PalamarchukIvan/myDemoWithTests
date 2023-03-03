@@ -17,17 +17,11 @@ public class EmployeeReadDto {
     @Size(min = 2, max = 32, message = "Name must be between 2 and 32 characters long")
     @Schema(description = "Name of an employee.", example = "Billy", required = true)
     public String name;
-
     public String country;
-
     @Email
     @NotNull
     public String email;
-
     public Set<AddressDto> addresses = new HashSet<>();
-
-    //todo: dfhgjkdfhg Jira - 5544
     public Date date = Date.from(Instant.now());
-
     public Gender gender;
 }

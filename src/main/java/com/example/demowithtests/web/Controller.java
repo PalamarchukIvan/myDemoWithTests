@@ -5,6 +5,7 @@ import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.util.config.EmployeeConverter;
+import com.example.demowithtests.util.exception.ResourceIsPrivateException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -43,18 +45,29 @@ public class Controller {
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
     public EmployeeDto saveEmployee(@RequestBody @Valid EmployeeDto requestForSave) {
-
         var employee = converter.getMapperFacade().map(requestForSave, Employee.class);
-        var dto = converter.toDto(employeeService.create(employee));
-
-        return dto;
+        return converter.toDto(employeeService.create(employee));
     }
 
     //Получение списка юзеров
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllUsers() {
-        return employeeService.getAll();
+        return employeeService.getAll()
+                .stream()
+                .peek(employee -> {
+                    if (employee.getIsPrivate()){
+                        makeEmployeeDataPrivate(employee);
+                    }
+                }).collect(Collectors.toList());
+    }
+
+    private static void makeEmployeeDataPrivate(Employee employee) {
+        employee.setName("Is private");
+        employee.setAddresses(null);
+        employee.setCountry("Is private");
+        employee.setEmail("Is private");
+        employee.setGender(null);
     }
 
     @GetMapping("/users/p")
@@ -76,19 +89,15 @@ public class Controller {
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
     public EmployeeReadDto getEmployeeById(@PathVariable Integer id) {
-        log.debug("getEmployeeById() Controller - start: id = {}", id);
         var employee = employeeService.getById(id);
-        log.debug("getById() Controller - to dto start: id = {}", id);
-        var dto = converter.toReadDto(employee);
-        log.debug("getEmployeeById() Controller - end: name = {}", dto.name);
-        return dto;
+        if(employee.getIsPrivate()) throw new ResourceIsPrivateException();
+        return converter.toReadDto(employee);
     }
 
     //Обновление юзера
     @PutMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Employee refreshEmployee(@PathVariable("id") Integer id, @RequestBody Employee employee) {
-
         return employeeService.updateById(id, employee);
     }
 
@@ -139,7 +148,9 @@ public class Controller {
     @GetMapping("/users/addresses")
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllUsersWithAddresses() {
-        System.out.println("Controller");
-        return employeeService.findEmployeeIfAddressPresent();
+        return employeeService.findEmployeeIfAddressPresent()
+                .stream()
+                .filter(employee -> !employee.getIsPrivate())
+                .collect(Collectors.toList());
     }
 }
