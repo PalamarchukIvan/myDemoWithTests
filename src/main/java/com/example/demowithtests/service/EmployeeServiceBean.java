@@ -124,7 +124,12 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
+<<<<<<< HEAD
     public List<Employee> findEmployeeIfAddressPresent() {
         return employeeRepository.findEmployeeByPresentAddress();
+=======
+    public List<Employee> findEmployeeByPartOfTheName(String letters) {
+        return employeeRepository.findEmployeeByPartOfTheName(letters);
+>>>>>>> jpql
     }
 }

@@ -50,5 +50,9 @@ public interface EmployeeService {
 
     Optional<String> findEmails();
 
+<<<<<<< HEAD
     List<Employee> findEmployeeIfAddressPresent();
+=======
+    List<Employee> findEmployeeByPartOfTheName(String letters);
+>>>>>>> jpql
 }
