@@ -147,15 +147,16 @@ public class Controller {
 
     @GetMapping("/users/addresses")
     @ResponseStatus(HttpStatus.OK)
-<<<<<<< HEAD
     public List<Employee> getAllUsersWithAddresses() {
         return employeeService.findEmployeeIfAddressPresent()
                 .stream()
                 .filter(employee -> !employee.getIsPrivate())
                 .collect(Collectors.toList());
-=======
+    }
+
+    @GetMapping("/users/char")
+    @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllUsersByNamePartly(@RequestParam String letters){
         return employeeService.findEmployeeByPartOfTheName(letters);
->>>>>>> jpql
     }
 }
