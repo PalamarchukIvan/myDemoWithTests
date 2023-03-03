@@ -12,13 +12,13 @@ import java.util.Date;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+    public ResponseEntity<?> handleResourceNotFoundException(WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), "Resource not found", request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceIsPrivateException.class)
-    protected ResponseEntity<?> handleDeleteException(Exception ex, WebRequest request) {
+    protected ResponseEntity<?> handleDeleteException(WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), "Resource is private", request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }

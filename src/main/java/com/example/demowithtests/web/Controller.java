@@ -157,6 +157,12 @@ public class Controller {
     @GetMapping("/users/char")
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllUsersByNamePartly(@RequestParam String letters){
-        return employeeService.findEmployeeByPartOfTheName(letters);
+        return employeeService.findEmployeeByPartOfTheName(letters)
+                .stream()
+                .peek(employee -> {
+                    if (employee.getIsPrivate()) {
+                        makeEmployeeDataPrivate(employee);
+                    }
+                }).collect(Collectors.toList());
     }
 }
