@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Repository
-//@Component
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     Employee findByName(String name);

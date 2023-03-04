@@ -53,28 +53,12 @@ public class Controller {
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllUsers() {
-        return employeeService.getAll()
-                .stream()
-                .peek(employee -> {
-                    if (employee.getIsPrivate()){
-                        makeEmployeeDataPrivate(employee);
-                    }
-                }).collect(Collectors.toList());
+        return employeeService.filterPrivateEmployees(employeeService.getAll());
     }
-
-    private static void makeEmployeeDataPrivate(Employee employee) {
-        employee.setName("Is private");
-        employee.setAddresses(null);
-        employee.setCountry("Is private");
-        employee.setEmail("Is private");
-        employee.setGender(null);
-    }
-
     @GetMapping("/users/p")
     @ResponseStatus(HttpStatus.OK)
     public Page<Employee> getPage(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "5") int size
-    ) {
+                                  @RequestParam(defaultValue = "5") int size) {
         Pageable paging = PageRequest.of(page, size);
         return employeeService.getAllWithPagination(paging);
     }
@@ -148,21 +132,12 @@ public class Controller {
     @GetMapping("/users/addresses")
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllUsersWithAddresses() {
-        return employeeService.findEmployeeIfAddressPresent()
-                .stream()
-                .filter(employee -> !employee.getIsPrivate())
-                .collect(Collectors.toList());
+        return employeeService.filterPrivateEmployees(employeeService.findEmployeeIfAddressPresent());
     }
 
     @GetMapping("/users/char")
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllUsersByNamePartly(@RequestParam String letters){
-        return employeeService.findEmployeeByPartOfTheName(letters)
-                .stream()
-                .peek(employee -> {
-                    if (employee.getIsPrivate()) {
-                        makeEmployeeDataPrivate(employee);
-                    }
-                }).collect(Collectors.toList());
+        return employeeService.filterPrivateEmployees(employeeService.findEmployeeByPartOfTheName(letters));
     }
 }

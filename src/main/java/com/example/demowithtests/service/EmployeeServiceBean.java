@@ -130,4 +130,20 @@ public class EmployeeServiceBean implements EmployeeService {
     public List<Employee> findEmployeeByPartOfTheName(String letters) {
         return employeeRepository.findEmployeeByPartOfTheName(letters);
     }
+
+    public List<Employee> filterPrivateEmployees(List<Employee> employees) {
+        return employees.stream()
+                .peek(employee -> {
+                    if (employee.getIsPrivate()){
+                        makeEmployeeDataPrivate(employee);
+                    }
+                }).collect(Collectors.toList());
+    }
+    private void makeEmployeeDataPrivate(Employee employee) {
+        employee.setName("Is private");
+        employee.setAddresses(null);
+        employee.setCountry("Is private");
+        employee.setEmail("Is private");
+        employee.setGender(null);
+    }
 }
