@@ -81,12 +81,18 @@ public class Controller {
     //Обновление юзера
     @PutMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Employee refreshEmployee(@PathVariable("id") Integer id, @RequestBody Employee employee) {
-        return employeeService.updateById(id, employee);
+    public Employee refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody Employee employee) {
+        return employeeService.repostById(id, employee);
+    }
+
+    @PatchMapping("/users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Employee refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody Employee employee) {
+        return employeeService.patchById(id, employee);
     }
 
     //Удаление по id
-    @PatchMapping("/users/{id}")
+    @PatchMapping("/users/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEmployeeById(@PathVariable Integer id) {
         employeeService.removeById(id);

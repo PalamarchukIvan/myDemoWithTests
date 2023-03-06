@@ -45,15 +45,31 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
-    public Employee updateById(Integer id, Employee employee) {
+    public Employee repostById(Integer id, Employee employee) {
         return employeeRepository.findById(id)
                 .map(entity -> {
                     entity.setName(employee.getName());
                     entity.setEmail(employee.getEmail());
                     entity.setCountry(employee.getCountry());
+                    entity.setIsPrivate(employee.getIsPrivate());
+                    entity.setGender(employee.getGender());
+                    entity.setAddresses(employee.getAddresses());
                     return employeeRepository.save(entity);
-                })
-                .orElseThrow(ResourceNotFoundException::new);
+                }).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    @Override
+    public Employee patchById(Integer id, Employee employee) {
+        return employeeRepository.findById(id)
+                .map(entity -> {
+                    entity.setName(employee.getName() == null ? entity.getName() : employee.getName());
+                    entity.setEmail(employee.getEmail() == null ? entity.getEmail() : employee.getEmail());
+                    entity.setCountry(employee.getCountry() == null ? entity.getCountry() : employee.getCountry());
+                    entity.setGender(employee.getGender() == null ? entity.getGender() : employee.getGender());
+                    entity.setAddresses(employee.getAddresses() == null ? entity.getAddresses() : employee.getAddresses());
+                    entity.setIsPrivate(employee.getIsPrivate() == null ? entity.getIsPrivate() : employee.getIsPrivate());
+                    return employeeRepository.save(entity);
+                }).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -126,6 +142,7 @@ public class EmployeeServiceBean implements EmployeeService {
     public List<Employee> findEmployeeIfAddressPresent() {
         return employeeRepository.findEmployeeByPresentAddress();
     }
+
     public List<Employee> findEmployeeByPartOfTheName(String letters) {
         return employeeRepository.findEmployeeByPartOfTheName(letters);
     }
@@ -133,7 +150,7 @@ public class EmployeeServiceBean implements EmployeeService {
     public List<Employee> filterPrivateEmployees(List<Employee> employees) {
         return employees.stream()
                 .peek(employee -> {
-                    if (employee.getIsPrivate()){
+                    if (employee.getIsPrivate()) {
                         makeEmployeeDataPrivate(employee);
                     }
                 }).collect(Collectors.toList());
@@ -142,20 +159,20 @@ public class EmployeeServiceBean implements EmployeeService {
     @Override
     public void generateTestDatabase(int numberOfEntities) {
         for (int i = 0; i < numberOfEntities; i++) {
-            int id = employeeRepository.findLastEmployeeId()+1;
+            int id = employeeRepository.findLastEmployeeId() + 1;
             employeeRepository.save(new Employee(
                     id,
                     "TestName ".concat(Integer.toString(id)),
                     "testCountry".concat(Integer.toString(id)),
                     "testmaint@mail.ru",
-                    (int)(Math.random() * 4) < 3 ? null : Set.of(new Address(
-                            (long) (employeeRepository.findLastAddressId()+1),
+                    (int) (Math.random() * 4) < 3 ? null : Set.of(new Address(
+                            (long) (employeeRepository.findLastAddressId() + 1),
                             true,
                             "someCountry",
                             "someCity",
                             "someStreet"
                     )),
-                    (int)(Math.random() * 2) > 1 ? Gender.M : Gender.F,
+                    (int) (Math.random() * 2) > 1 ? Gender.M : Gender.F,
                     false
             ));
         }

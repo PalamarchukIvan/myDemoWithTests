@@ -17,7 +17,9 @@ public interface EmployeeService {
 
     Employee getById(Integer id);
 
-    Employee updateById(Integer id, Employee plane);
+    Employee repostById(Integer id, Employee plane);
+
+    Employee patchById(Integer id, Employee plane);
 
     void removeById(Integer id);
 
