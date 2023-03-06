@@ -1,6 +1,8 @@
 package com.example.demowithtests.service;
 
+import com.example.demowithtests.domain.Address;
 import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
@@ -11,10 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -139,6 +138,29 @@ public class EmployeeServiceBean implements EmployeeService {
                     }
                 }).collect(Collectors.toList());
     }
+
+    @Override
+    public void generateTestDatabase(int numberOfEntities) {
+        for (int i = 0; i < numberOfEntities; i++) {
+            int id = employeeRepository.findLastEmployeeId()+1;
+            employeeRepository.save(new Employee(
+                    id,
+                    "TestName ".concat(Integer.toString(id)),
+                    "testCountry".concat(Integer.toString(id)),
+                    "testmaint@mail.ru",
+                    (int)(Math.random() * 4) < 3 ? null : Set.of(new Address(
+                            (long) (employeeRepository.findLastAddressId()+1),
+                            true,
+                            "someCountry",
+                            "someCity",
+                            "someStreet"
+                    )),
+                    (int)(Math.random() * 2) > 1 ? Gender.M : Gender.F,
+                    false
+            ));
+        }
+    }
+
     private void makeEmployeeDataPrivate(Employee employee) {
         employee.setName("Is private");
         employee.setAddresses(null);

@@ -28,4 +28,5 @@ public class Employee {
     private Gender gender;
     @Column(columnDefinition = "BOOLEAN DEFAULT 'false'")//устанавливает дэфолтное значение false
     private Boolean isPrivate = Boolean.FALSE;
+
 }

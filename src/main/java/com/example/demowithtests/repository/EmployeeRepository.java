@@ -27,4 +27,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     List<Employee> findEmployeeByPresentAddress();
     @Query(value = "select e from Employee e where lower(e.name) like concat('%', lower(:letters), '%') ")
     List<Employee> findEmployeeByPartOfTheName(String letters);
+    @Query(value = "select max(users.id) from users", nativeQuery = true)
+    Integer findLastEmployeeId();
+
+    @Query(value = "select max(addresses.id) from addresses", nativeQuery = true)
+    Integer findLastAddressId();
 }

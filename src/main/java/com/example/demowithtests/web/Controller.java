@@ -140,4 +140,10 @@ public class Controller {
     public List<Employee> getAllUsersByNamePartly(@RequestParam String letters){
         return employeeService.filterPrivateEmployees(employeeService.findEmployeeByPartOfTheName(letters));
     }
+
+    @PostMapping("/users/generation/{number}")
+    @ResponseStatus(HttpStatus.OK)
+    public void generateTestSetOfEntities(@PathVariable int number) {
+        employeeService.generateTestDatabase(number);
+    }
 }
