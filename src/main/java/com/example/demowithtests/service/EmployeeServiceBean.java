@@ -5,6 +5,7 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -159,20 +160,25 @@ public class EmployeeServiceBean implements EmployeeService {
     @Override
     public void generateTestDatabase(int numberOfEntities) {
         for (int i = 0; i < numberOfEntities; i++) {
-            int id = employeeRepository.findLastEmployeeId() + 1;
+            System.out.println(i);
+            var lastEmployee = employeeRepository.findLastEmployeeId();
+            var lastAddress = employeeRepository.findLastAddressId();
+            int idEmployee = (lastEmployee == null) ? 0 : lastEmployee + 1;
+            long idAddress = (lastAddress == null) ? 0 : lastAddress + 1;
+            System.out.println("idEmployee = " + idEmployee + " isAddress = " + idAddress);
             employeeRepository.save(new Employee(
-                    id,
-                    "TestName ".concat(Integer.toString(id)),
-                    "testCountry".concat(Integer.toString(id)),
+                    idEmployee,
+                    "TestName ".concat(Integer.toString(idEmployee)),
+                    "testCountry ".concat(Integer.toString(idEmployee)),
                     "testmaint@mail.ru",
-                    (int) (Math.random() * 4) < 3 ? null : Set.of(new Address(
-                            (long) (employeeRepository.findLastAddressId() + 1),
+                    (Math.random() * 4) < 3 ? null : Set.of(new Address(
+                            idAddress,
                             true,
-                            "someCountry",
-                            "someCity",
-                            "someStreet"
+                            "someCountry ".concat(Long.toString(idAddress)),
+                            "someCity ".concat(Long.toString(idAddress)),
+                            "someStreet ".concat(Long.toString(idAddress))
                     )),
-                    (int) (Math.random() * 2) > 1 ? Gender.M : Gender.F,
+                    Math.random() * 2 > 1 ? Gender.M : Gender.F,
                     false
             ));
         }

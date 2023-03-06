@@ -29,7 +29,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     List<Employee> findEmployeeByPartOfTheName(String letters);
     @Query(value = "select max(users.id) from users", nativeQuery = true)
     Integer findLastEmployeeId();
-
     @Query(value = "select max(addresses.id) from addresses", nativeQuery = true)
     Integer findLastAddressId();
 }
