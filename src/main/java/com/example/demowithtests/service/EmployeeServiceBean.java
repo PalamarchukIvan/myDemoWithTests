@@ -7,12 +7,15 @@ import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,16 +48,17 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public Employee repostById(Integer id, Employee employee) {
-        return employeeRepository.findById(id)
-                .map(entity -> {
-                    entity.setName(employee.getName());
-                    entity.setEmail(employee.getEmail());
-                    entity.setCountry(employee.getCountry());
-                    entity.setIsPrivate(employee.getIsPrivate());
-                    entity.setGender(employee.getGender());
-                    entity.setAddresses(employee.getAddresses());
-                    return employeeRepository.save(entity);
-                }).orElseThrow(ResourceNotFoundException::new);
+        var entity = employeeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        if(entity.equals(employee)) {
+            return entity;
+        }
+        entity.setName(employee.getName());
+        entity.setEmail(employee.getEmail());
+        entity.setCountry(employee.getCountry());
+        entity.setIsPrivate(employee.getIsPrivate());
+        entity.setGender(employee.getGender());
+        entity.setAddresses(employee.getAddresses());
+        return employeeRepository.save(entity);
     }
 
     @Override
@@ -89,6 +93,12 @@ public class EmployeeServiceBean implements EmployeeService {
     @Override
     public void removeAll() {
         employeeRepository.deleteAll();
+        try {
+            employeeRepository.resetSequenceEmployee();
+            employeeRepository.resetSequenceAddress();
+        } catch (SQLException e) {
+            System.out.println(e.getSQLState());
+        }
     }
 
     @Override
@@ -165,28 +175,32 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public void generateTestDatabase(int numberOfEntities) {
-        for (int i = 0; i < numberOfEntities; i++) {
-            System.out.println(i);
-            var lastEmployee = employeeRepository.findLastEmployeeId();
-            var lastAddress = employeeRepository.findLastAddressId();
-            int idEmployee = (lastEmployee == null) ? 0 : lastEmployee + 1;
-            long idAddress = (lastAddress == null) ? 0 : lastAddress + 1;
-            employeeRepository.save(new Employee(
-                    idEmployee,
-                    "TestName ".concat(Integer.toString(idEmployee)),
-                    "testCountry ".concat(Integer.toString(idEmployee)),
-                    "testmaint@mail.ru",
-                    (Math.random() * 4 < 3) ? null : Set.of(new Address(
-                            idAddress,
-                            true,
-                            "someCountry ".concat(Long.toString(idAddress)),
-                            "someCity ".concat(Long.toString(idAddress)),
-                            "someStreet ".concat(Long.toString(idAddress))
-                    )),
-                    (Math.random() * 2 > 1) ? Gender.M : Gender.F,
-                    false
-            ));
+        for (int i = 0; i <= numberOfEntities; i++) {
+            var lastEmployeeId = employeeRepository.findLastEmployeeId();
+            var lastAddressId = employeeRepository.findLastAddressId();
+            int idEmployee = (lastEmployeeId == null) ? 1 : lastEmployeeId + 1;
+            long idAddress = (lastAddressId == null) ? 1 : lastAddressId + 1;
+            employeeRepository.save(createRandomEntity(idEmployee, idAddress));
         }
+    }
+
+    @NotNull
+    private static Employee createRandomEntity(int idEmployee, long idAddress) {
+        return new Employee(
+                idEmployee,
+                "TestName ".concat(Integer.toString(idEmployee)),
+                "testCountry ".concat(Integer.toString(idEmployee)),
+                "testmaint@mail.ru",
+                (Math.random() * 4 < 2) ? null : Set.of(new Address(
+                        idAddress,
+                        true,
+                        "someCountry ".concat(Long.toString(idAddress)),
+                        "someCity ".concat(Long.toString(idAddress)),
+                        "someStreet ".concat(Long.toString(idAddress))
+                )),
+                (Math.random() * 2 > 1) ? Gender.M : Gender.F,
+                false
+        );
     }
 
     private void makeEmployeeDataPrivate(Employee employee) {
