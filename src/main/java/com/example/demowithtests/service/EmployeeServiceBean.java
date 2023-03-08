@@ -59,22 +59,24 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public Employee patchById(Integer id, Employee employee) {
-        return employeeRepository.findById(id)
-                .map(entity -> {
-                    entity.setName(employee.getName() == null || employee.getName().equals(entity.getName()) ?
-                            entity.getName() : employee.getName());
-                    entity.setEmail(employee.getEmail() == null || employee.getEmail().equals(entity.getEmail()) ?
-                            entity.getEmail() : employee.getEmail());
-                    entity.setCountry(employee.getCountry() == null || employee.getCountry().equals(entity.getCountry()) ?
-                            entity.getCountry() : employee.getCountry());
-                    entity.setGender(employee.getGender() == null || employee.getGender().equals(entity.getGender()) ?
-                            entity.getGender() : employee.getGender());
-                    entity.setAddresses(employee.getAddresses() == null || employee.getAddresses().equals(entity.getAddresses()) ?
-                            entity.getAddresses() : employee.getAddresses());
-                    entity.setIsPrivate(employee.getIsPrivate() == null || employee.getIsPrivate().equals(entity.getIsPrivate()) ?
-                            entity.getIsPrivate() : employee.getIsPrivate());
-                    return employeeRepository.save(entity);
-                }).orElseThrow(ResourceNotFoundException::new);
+        var entity = employeeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        if(entity.equals(employee)) {
+            return entity;
+        }
+
+        entity.setName(employee.getName() == null || employee.getName().equals(entity.getName()) ?
+                entity.getName() : employee.getName());
+        entity.setEmail(employee.getEmail() == null || employee.getEmail().equals(entity.getEmail()) ?
+                entity.getEmail() : employee.getEmail());
+        entity.setCountry(employee.getCountry() == null || employee.getCountry().equals(entity.getCountry()) ?
+                entity.getCountry() : employee.getCountry());
+        entity.setGender(employee.getGender() == null || employee.getGender().equals(entity.getGender()) ?
+                entity.getGender() : employee.getGender());
+        entity.setAddresses(employee.getAddresses() == null || employee.getAddresses().equals(entity.getAddresses()) ?
+                entity.getAddresses() : employee.getAddresses());
+        entity.setIsPrivate(employee.getIsPrivate() == null || employee.getIsPrivate().equals(entity.getIsPrivate()) ?
+                entity.getIsPrivate() : employee.getIsPrivate());
+        return employeeRepository.save(entity);
     }
 
     @Override
