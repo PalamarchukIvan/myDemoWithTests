@@ -5,7 +5,6 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,7 +37,6 @@ public class EmployeeServiceBean implements EmployeeService {
     public Page<Employee> getAllWithPagination(Pageable pageable) {
         return employeeRepository.findAll(pageable);
     }
-
     @Override
     public Employee getById(Integer id) {
         return employeeRepository.findById(id)
@@ -63,12 +61,18 @@ public class EmployeeServiceBean implements EmployeeService {
     public Employee patchById(Integer id, Employee employee) {
         return employeeRepository.findById(id)
                 .map(entity -> {
-                    entity.setName(employee.getName() == null ? entity.getName() : employee.getName());
-                    entity.setEmail(employee.getEmail() == null ? entity.getEmail() : employee.getEmail());
-                    entity.setCountry(employee.getCountry() == null ? entity.getCountry() : employee.getCountry());
-                    entity.setGender(employee.getGender() == null ? entity.getGender() : employee.getGender());
-                    entity.setAddresses(employee.getAddresses() == null ? entity.getAddresses() : employee.getAddresses());
-                    entity.setIsPrivate(employee.getIsPrivate() == null ? entity.getIsPrivate() : employee.getIsPrivate());
+                    entity.setName(employee.getName() == null || employee.getName().equals(entity.getName()) ?
+                            entity.getName() : employee.getName());
+                    entity.setEmail(employee.getEmail() == null || employee.getEmail().equals(entity.getEmail()) ?
+                            entity.getEmail() : employee.getEmail());
+                    entity.setCountry(employee.getCountry() == null || employee.getCountry().equals(entity.getCountry()) ?
+                            entity.getCountry() : employee.getCountry());
+                    entity.setGender(employee.getGender() == null || employee.getGender().equals(entity.getGender()) ?
+                            entity.getGender() : employee.getGender());
+                    entity.setAddresses(employee.getAddresses() == null || employee.getAddresses().equals(entity.getAddresses()) ?
+                            entity.getAddresses() : employee.getAddresses());
+                    entity.setIsPrivate(employee.getIsPrivate() == null || employee.getIsPrivate().equals(entity.getIsPrivate()) ?
+                            entity.getIsPrivate() : employee.getIsPrivate());
                     return employeeRepository.save(entity);
                 }).orElseThrow(ResourceNotFoundException::new);
     }
@@ -165,20 +169,19 @@ public class EmployeeServiceBean implements EmployeeService {
             var lastAddress = employeeRepository.findLastAddressId();
             int idEmployee = (lastEmployee == null) ? 0 : lastEmployee + 1;
             long idAddress = (lastAddress == null) ? 0 : lastAddress + 1;
-            System.out.println("idEmployee = " + idEmployee + " isAddress = " + idAddress);
             employeeRepository.save(new Employee(
                     idEmployee,
                     "TestName ".concat(Integer.toString(idEmployee)),
                     "testCountry ".concat(Integer.toString(idEmployee)),
                     "testmaint@mail.ru",
-                    (Math.random() * 4) < 3 ? null : Set.of(new Address(
+                    (Math.random() * 4 < 3) ? null : Set.of(new Address(
                             idAddress,
                             true,
                             "someCountry ".concat(Long.toString(idAddress)),
                             "someCity ".concat(Long.toString(idAddress)),
                             "someStreet ".concat(Long.toString(idAddress))
                     )),
-                    Math.random() * 2 > 1 ? Gender.M : Gender.F,
+                    (Math.random() * 2 > 1) ? Gender.M : Gender.F,
                     false
             ));
         }
