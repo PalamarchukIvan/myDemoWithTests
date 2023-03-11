@@ -63,30 +63,32 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public Employee patchById(Integer id, Employee employee) {
-        var entity = employeeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
-        if (entity.equals(employee)) {
-            return entity;
-        }
+        return employeeRepository.findById(id)
+                .map(entity -> {
+                    if (entity.equals(employee)) {
+                        return entity;
+                    }
+                    if (employee.getName() != null && !entity.getName().equals(employee.getName()))
+                        entity.setName(employee.getName());
 
-        if (employee.getName() != null && !employee.getName().equals(entity.getName()))
-            entity.setName(employee.getName());
+                    if (employee.getEmail() != null && !entity.getEmail().equals(employee.getEmail()))
+                        entity.setEmail(employee.getEmail());
 
-        if (employee.getEmail() != null && !employee.getEmail().equals(entity.getEmail()))
-            entity.setEmail(employee.getEmail());
+                    if (employee.getCountry() != null && !entity.getCountry().equals(employee.getCountry()))
+                        entity.setCountry(employee.getCountry());
 
-        if (employee.getCountry() != null && !employee.getCountry().equals(entity.getCountry()))
-            entity.setCountry(employee.getCountry());
+                    if (employee.getGender() != null && !entity.getGender().equals(employee.getGender()))
+                        entity.setGender(employee.getGender());
 
-        if (employee.getGender() != null && !employee.getGender().equals(entity.getGender()))
-            entity.setGender(employee.getGender());
+                    if (employee.getAddresses() != null && !entity.getAddresses().equals(employee.getAddresses()))
+                        entity.setAddresses(employee.getAddresses());
 
-        if (employee.getAddresses() != null && !employee.getAddresses().equals(entity.getAddresses()))
-            entity.setAddresses(employee.getAddresses());
+                    if (employee.getIsPrivate() != null && !entity.getIsPrivate().equals(employee.getIsPrivate()))
+                        entity.setIsPrivate(employee.getIsPrivate());
 
-        if (employee.getIsPrivate() != null && !employee.getIsPrivate().equals(entity.getIsPrivate()))
-            entity.setIsPrivate(employee.getIsPrivate());
-
-        return employeeRepository.save(entity);
+                    return employeeRepository.save(entity);
+                })
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
