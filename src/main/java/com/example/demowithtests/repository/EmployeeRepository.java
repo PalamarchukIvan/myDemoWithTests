@@ -31,4 +31,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     Integer findLastEmployeeId();
     @Query(value = "select max(addresses.id) from addresses", nativeQuery = true)
     Integer findLastAddressId();
+
+    @Query(value = "SELECT setval('users_id_seq', 1)", nativeQuery = true)
+    void resetSequenceEmployee();
+    @Query(value = "SELECT setval('addresses_id_seq', 1)", nativeQuery = true)
+    void resetSequenceAddress();
 }
