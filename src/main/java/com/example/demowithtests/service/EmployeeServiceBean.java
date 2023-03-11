@@ -7,7 +7,6 @@ import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +39,7 @@ public class EmployeeServiceBean implements EmployeeService {
     public Page<Employee> getAllWithPagination(Pageable pageable) {
         return employeeRepository.findAll(pageable);
     }
+
     @Override
     public Employee getById(Integer id) {
         return employeeRepository.findById(id)
@@ -49,7 +49,7 @@ public class EmployeeServiceBean implements EmployeeService {
     @Override
     public Employee repostById(Integer id, Employee employee) {
         var entity = employeeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
-        if(entity.equals(employee)) {
+        if (entity.equals(employee)) {
             return entity;
         }
         entity.setName(employee.getName());
@@ -64,22 +64,28 @@ public class EmployeeServiceBean implements EmployeeService {
     @Override
     public Employee patchById(Integer id, Employee employee) {
         var entity = employeeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
-        if(entity.equals(employee)) {
+        if (entity.equals(employee)) {
             return entity;
         }
 
-        entity.setName(employee.getName() == null || employee.getName().equals(entity.getName()) ?
-                entity.getName() : employee.getName());
-        entity.setEmail(employee.getEmail() == null || employee.getEmail().equals(entity.getEmail()) ?
-                entity.getEmail() : employee.getEmail());
-        entity.setCountry(employee.getCountry() == null || employee.getCountry().equals(entity.getCountry()) ?
-                entity.getCountry() : employee.getCountry());
-        entity.setGender(employee.getGender() == null || employee.getGender().equals(entity.getGender()) ?
-                entity.getGender() : employee.getGender());
-        entity.setAddresses(employee.getAddresses() == null || employee.getAddresses().equals(entity.getAddresses()) ?
-                entity.getAddresses() : employee.getAddresses());
-        entity.setIsPrivate(employee.getIsPrivate() == null || employee.getIsPrivate().equals(entity.getIsPrivate()) ?
-                entity.getIsPrivate() : employee.getIsPrivate());
+        if (employee.getName() != null && !employee.getName().equals(entity.getName()))
+            entity.setName(employee.getName());
+
+        if (employee.getEmail() != null && !employee.getEmail().equals(entity.getEmail()))
+            entity.setEmail(employee.getEmail());
+
+        if (employee.getCountry() != null && !employee.getCountry().equals(entity.getCountry()))
+            entity.setCountry(employee.getCountry());
+
+        if (employee.getGender() != null && !employee.getGender().equals(entity.getGender()))
+            entity.setGender(employee.getGender());
+
+        if (employee.getAddresses() != null && !employee.getAddresses().equals(entity.getAddresses()))
+            entity.setAddresses(employee.getAddresses());
+
+        if (employee.getIsPrivate() != null && !employee.getIsPrivate().equals(entity.getIsPrivate()))
+            entity.setIsPrivate(employee.getIsPrivate());
+
         return employeeRepository.save(entity);
     }
 
@@ -93,12 +99,8 @@ public class EmployeeServiceBean implements EmployeeService {
     @Override
     public void removeAll() {
         employeeRepository.deleteAll();
-        try {
-            employeeRepository.resetSequenceEmployee();
-            employeeRepository.resetSequenceAddress();
-        } catch (SQLException e) {
-            System.out.println(e.getSQLState());
-        }
+        employeeRepository.resetSequenceEmployee();
+        employeeRepository.resetSequenceAddress();
     }
 
     @Override
@@ -184,7 +186,6 @@ public class EmployeeServiceBean implements EmployeeService {
         }
     }
 
-    @NotNull
     private static Employee createRandomEntity(int idEmployee, long idAddress) {
         return new Employee(
                 idEmployee,
