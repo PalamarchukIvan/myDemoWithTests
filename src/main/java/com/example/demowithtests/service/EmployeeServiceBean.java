@@ -179,31 +179,28 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public void generateTestDatabase(int numberOfEntities) {
+        List<Employee> list = new LinkedList<>();
         for (int i = 0; i <= numberOfEntities; i++) {
-            var lastEmployeeId = employeeRepository.findLastEmployeeId();
-            var lastAddressId = employeeRepository.findLastAddressId();
-            int idEmployee = (lastEmployeeId == null) ? 1 : lastEmployeeId + 1;
-            long idAddress = (lastAddressId == null) ? 1 : lastAddressId + 1;
-            employeeRepository.save(createRandomEntity(idEmployee, idAddress));
+            list.add(createRandomEntity(i));
         }
+        employeeRepository.saveAll(list);
     }
 
-    private static Employee createRandomEntity(int idEmployee, long idAddress) {
-        return new Employee(
-                idEmployee,
-                "TestName ".concat(Integer.toString(idEmployee)),
-                "testCountry ".concat(Integer.toString(idEmployee)),
-                "testmaint@mail.ru",
-                (Math.random() * 4 < 2) ? null : Set.of(new Address(
-                        idAddress,
-                        true,
-                        "someCountry ".concat(Long.toString(idAddress)),
-                        "someCity ".concat(Long.toString(idAddress)),
-                        "someStreet ".concat(Long.toString(idAddress))
-                )),
-                (Math.random() * 2 > 1) ? Gender.M : Gender.F,
-                false
-        );
+    private static Employee createRandomEntity(int i) {
+        return Employee.builder()
+                .name("test name " + i)
+                .country("test country " +i)
+                .email("testmail@mail.ru")
+                .addresses((Math.random() * 4 < 2) ? null : Set.of(Address.builder()
+                        .addressHasActive(true)
+                        .country("someCountry ".concat(Long.toString(i)))
+                        .city("someCity ".concat(Long.toString(i)))
+                        .street("someStreet ".concat(Long.toString(i)))
+                        .build()
+                ))
+                .gender((Math.random() * 2 > 1) ? Gender.M : Gender.F)
+                .isPrivate(false)
+                .build();
     }
 
     private void makeEmployeeDataPrivate(Employee employee) {

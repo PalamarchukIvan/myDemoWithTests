@@ -54,16 +54,14 @@ public class Controller {
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsers() {
-        //return employeeService.filterPrivateEmployees(employeeService.getAll());
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.filterPrivateEmployees(employeeService.getAll()));
     }
     @GetMapping("/users/p")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeReadDto> getPage(@RequestParam(defaultValue = "0") int page,
+    public Page<EmployeeReadDto> getPage(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "5") int size) {
         Pageable paging = PageRequest.of(page, size);
-        List<Employee> list = employeeService.getAllWithPagination(paging).toList();
-        return  EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(list);
+        return  EmployeeMapper.employeeToEmployeeReadDto(employeeService.getAllWithPagination(paging));
     }
 
     //Получения юзера по id
