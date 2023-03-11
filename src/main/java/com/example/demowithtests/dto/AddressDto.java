@@ -7,8 +7,6 @@ import java.util.Date;
 
 //@Accessors(chain = true)
 public class AddressDto {
-
-    public Long id;
     public Boolean addressHasActive = Boolean.TRUE;
     public String country;
     public String city;

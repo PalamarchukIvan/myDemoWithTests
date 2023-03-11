@@ -13,6 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
+@Builder
 @Table(name = "addresses")
 public class Address {
 
