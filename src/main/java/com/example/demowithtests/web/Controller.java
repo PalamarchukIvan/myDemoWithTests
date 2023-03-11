@@ -4,7 +4,7 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
 import com.example.demowithtests.service.EmployeeService;
-import com.example.demowithtests.util.config.EmployeeConverter;
+import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
 import com.example.demowithtests.util.exception.ResourceIsPrivateException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class Controller {
 
     private final EmployeeService employeeService;
-    private final EmployeeConverter converter;
+    //private final EmployeeConverter converter;
 
     //Операция сохранения юзера в базу данных
     @PostMapping("/users")
@@ -44,23 +44,25 @@ public class Controller {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
-    public EmployeeDto saveEmployee(@RequestBody @Valid EmployeeDto requestForSave) {
-        var employee = converter.getMapperFacade().map(requestForSave, Employee.class);
-        return converter.toDto(employeeService.create(employee));
+    public EmployeeReadDto saveEmployee(@RequestBody @Valid EmployeeDto requestForSave) {
+        var employee = EmployeeMapper.INSTANCE.employeeDtoToEmployee(requestForSave);
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
     }
 
     //Получение списка юзеров
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getAllUsers() {
-        return employeeService.filterPrivateEmployees(employeeService.getAll());
+    public List<EmployeeReadDto> getAllUsers() {
+        //return employeeService.filterPrivateEmployees(employeeService.getAll());
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.filterPrivateEmployees(employeeService.getAll()));
     }
     @GetMapping("/users/p")
     @ResponseStatus(HttpStatus.OK)
-    public Page<Employee> getPage(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "5") int size) {
+    public List<EmployeeReadDto> getPage(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "5") int size) {
         Pageable paging = PageRequest.of(page, size);
-        return employeeService.getAllWithPagination(paging);
+        List<Employee> list = employeeService.getAllWithPagination(paging).toList();
+        return  EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(list);
     }
 
     //Получения юзера по id
@@ -75,20 +77,20 @@ public class Controller {
     public EmployeeReadDto getEmployeeById(@PathVariable Integer id) {
         var employee = employeeService.getById(id);
         if(employee.getIsPrivate()) throw new ResourceIsPrivateException();
-        return converter.toReadDto(employee);
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employee);
     }
 
     //Обновление юзера
     @PutMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Employee refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody Employee employee) {
-        return employeeService.repostById(id, employee);
+    public Employee refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeDto employee) {
+        return employeeService.repostById(id, EmployeeMapper.INSTANCE.employeeDtoToEmployee(employee));
     }
 
     @PatchMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Employee refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody Employee employee) {
-        return employeeService.patchById(id, employee);
+    public Employee refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeDto employee) {
+        return employeeService.patchById(id, EmployeeMapper.INSTANCE.employeeDtoToEmployee(employee));
     }
 
     //Удаление по id
@@ -107,14 +109,14 @@ public class Controller {
 
     @GetMapping("/users/country")
     @ResponseStatus(HttpStatus.OK)
-    public Page<Employee> findByCountry(@RequestParam(required = false) String country,
+    public List<EmployeeReadDto> findByCountry(@RequestParam(required = false) String country,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "3") int size,
                                         @RequestParam(defaultValue = "") List<String> sortList,
                                         @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder) {
-        //Pageable paging = PageRequest.of(page, size);
-        //Pageable paging = PageRequest.of(page, size, Sort.by("name").ascending());
-        return employeeService.findByCountryContaining(country, page, size, sortList, sortOrder.toString());
+
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
+                employeeService.findByCountryContaining(country, page, size, sortList, sortOrder.toString()).toList());
     }
 
     @GetMapping("/users/c")
@@ -137,8 +139,9 @@ public class Controller {
 
     @GetMapping("/users/addresses")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getAllUsersWithAddresses() {
-        return employeeService.filterPrivateEmployees(employeeService.findEmployeeIfAddressPresent());
+    public List<EmployeeReadDto> getAllUsersWithAddresses() {
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
+                employeeService.filterPrivateEmployees(employeeService.findEmployeeIfAddressPresent()));
     }
 
     @GetMapping("/users/char")
