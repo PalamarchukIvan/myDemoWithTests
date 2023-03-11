@@ -9,6 +9,7 @@ import com.example.demowithtests.dto.EmployeeReadDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,10 @@ public interface EmployeeMapper {
     EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
 
     EmployeeReadDto employeeToEmployeeReadDto(Employee employee);
-    List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employees);
+    List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employeeList);
+    static Page<EmployeeReadDto> employeeToEmployeeReadDto(Page<Employee> employeePage){
+        return employeePage.map(INSTANCE::employeeToEmployeeReadDto);
+    }
     EmployeeDto employeeToEmployeeDto (Employee employee);
     EmployeeForPatchDto employeeToEmployeeForPatchDto(Employee employee);
     Employee employeeDtoToEmployee(EmployeeDto employeeDto);
