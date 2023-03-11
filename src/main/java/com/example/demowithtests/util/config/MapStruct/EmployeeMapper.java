@@ -4,6 +4,7 @@ import com.example.demowithtests.domain.Address;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.AddressDto;
 import com.example.demowithtests.dto.EmployeeDto;
+import com.example.demowithtests.dto.EmployeeForPatchDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -19,7 +20,9 @@ public interface EmployeeMapper {
     EmployeeReadDto employeeToEmployeeReadDto(Employee employee);
     List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employees);
     EmployeeDto employeeToEmployeeDto (Employee employee);
+    EmployeeForPatchDto employeeToEmployeeForPatchDto(Employee employee);
     Employee employeeDtoToEmployee(EmployeeDto employeeDto);
+    Employee employeeForPatchDtoToEmployee(EmployeeForPatchDto employee);
     Set<AddressDto> addressToAddressDto(Set<Address> address);
     Address addressDtoToAddress(AddressDto address);
 }

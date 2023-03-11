@@ -2,6 +2,7 @@ package com.example.demowithtests.web;
 
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.EmployeeDto;
+import com.example.demowithtests.dto.EmployeeForPatchDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
@@ -83,14 +84,16 @@ public class Controller {
     //Обновление юзера
     @PutMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Employee refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeDto employee) {
-        return employeeService.repostById(id, EmployeeMapper.INSTANCE.employeeDtoToEmployee(employee));
+    public EmployeeReadDto refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody EmployeeForPatchDto employee) {
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
+                employeeService.repostById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));
     }
 
     @PatchMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Employee refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeDto employee) {
-        return employeeService.patchById(id, EmployeeMapper.INSTANCE.employeeDtoToEmployee(employee));
+    public EmployeeReadDto refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody EmployeeForPatchDto employee) {
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
+                employeeService.patchById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));
     }
 
     //Удаление по id
@@ -146,11 +149,12 @@ public class Controller {
 
     @GetMapping("/users/char")
     @ResponseStatus(HttpStatus.OK)
-    public List<Employee> getAllUsersByNamePartly(@RequestParam String letters){
-        return employeeService.filterPrivateEmployees(employeeService.findEmployeeByPartOfTheName(letters));
+    public List<EmployeeReadDto> getAllUsersByNamePartly(@RequestParam String letters){
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
+                employeeService.filterPrivateEmployees(employeeService.findEmployeeByPartOfTheName(letters)));
     }
 
-        @PostMapping("/users/generation/{number}")
+    @PostMapping("/users/generation/{number}")
     @ResponseStatus(HttpStatus.OK)
     public void generateTestSetOfEntities(@PathVariable int number) {
         employeeService.generateTestDatabase(number);
