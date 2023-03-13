@@ -21,6 +21,7 @@ public class EmployeeReadDto {
     @Email
     @NotNull
     public String email;
+    public String phone;
     public Set<AddressDto> addresses = new HashSet<>();
     public Date date = Date.from(Instant.now());
     public Gender gender;

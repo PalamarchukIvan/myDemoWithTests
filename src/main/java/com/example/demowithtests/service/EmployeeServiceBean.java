@@ -58,6 +58,8 @@ public class EmployeeServiceBean implements EmployeeService {
         entity.setIsPrivate(employee.getIsPrivate());
         entity.setGender(employee.getGender());
         entity.setAddresses(employee.getAddresses());
+        entity.setPhone(employee.getPhone());
+        entity.setPassword(employee.getPassword());
         return employeeRepository.save(entity);
     }
 
@@ -86,6 +88,11 @@ public class EmployeeServiceBean implements EmployeeService {
                     if (employee.getIsPrivate() != null && !entity.getIsPrivate().equals(employee.getIsPrivate()))
                         entity.setIsPrivate(employee.getIsPrivate());
 
+                    if (employee.getPassword() != null && !entity.getPassword().equals(employee.getPassword()))
+                        entity.setPassword(employee.getPassword());
+
+                    if (employee.getPhone() != null && !entity.getPhone().equals(employee.getPhone()))
+                        entity.setPhone(employee.getPhone());
                     return employeeRepository.save(entity);
                 })
                 .orElseThrow(ResourceNotFoundException::new);
@@ -163,7 +170,7 @@ public class EmployeeServiceBean implements EmployeeService {
     public List<Employee> findEmployeeIfAddressPresent() {
         return employeeRepository.findEmployeeByPresentAddress();
     }
-
+    @Override
     public List<Employee> findEmployeeByPartOfTheName(String letters) {
         return employeeRepository.findEmployeeByPartOfTheName(letters);
     }
@@ -180,7 +187,7 @@ public class EmployeeServiceBean implements EmployeeService {
     @Override
     public void generateTestDatabase(int numberOfEntities) {
         List<Employee> list = new LinkedList<>();
-        for (int i = 0; i <= numberOfEntities; i++) {
+        for (int i = 0; i < numberOfEntities; i++) {
             list.add(createRandomEntity(i));
         }
         employeeRepository.saveAll(list);
@@ -191,6 +198,7 @@ public class EmployeeServiceBean implements EmployeeService {
                 .name("test name " + i)
                 .country("test country " +i)
                 .email("testmail@mail.ru")
+                .phone("+380971362935")
                 .addresses((Math.random() * 4 < 2) ? null : Set.of(Address.builder()
                         .addressHasActive(true)
                         .country("someCountry ".concat(Long.toString(i)))
@@ -200,6 +208,7 @@ public class EmployeeServiceBean implements EmployeeService {
                 ))
                 .gender((Math.random() * 2 > 1) ? Gender.M : Gender.F)
                 .isPrivate(false)
+                .password("123321")
                 .build();
     }
 
@@ -209,5 +218,7 @@ public class EmployeeServiceBean implements EmployeeService {
         employee.setCountry("Is private");
         employee.setEmail("Is private");
         employee.setGender(null);
+        employee.setPassword("is private");
+        employee.setPhone("is private");
     }
 }

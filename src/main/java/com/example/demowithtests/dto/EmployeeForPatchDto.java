@@ -1,11 +1,11 @@
 package com.example.demowithtests.dto;
 
+import com.example.demowithtests.anotations.Password;
+import com.example.demowithtests.anotations.Phone;
 import com.example.demowithtests.domain.Gender;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
 import java.util.Set;
 
 public class EmployeeForPatchDto {
@@ -15,7 +15,11 @@ public class EmployeeForPatchDto {
     public String country;
     @Email
     public String email;
+    @Phone
+    public String phone;
     public Set<AddressDto> addresses;
     public Gender gender;
     public Boolean isPrivate = Boolean.FALSE;
+    @Password
+    public String password;
 }
