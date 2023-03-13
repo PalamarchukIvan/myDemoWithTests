@@ -20,7 +20,7 @@ public interface EmployeeMapper {
 
     EmployeeReadDto employeeToEmployeeReadDto(Employee employee);
     List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employeeList);
-    static Page<EmployeeReadDto> employeeToEmployeeReadDto(Page<Employee> employeePage){
+    default Page<EmployeeReadDto> employeeToEmployeeReadDto(Page<Employee> employeePage){
         return employeePage.map(INSTANCE::employeeToEmployeeReadDto);
     }
     EmployeeDto employeeToEmployeeDto (Employee employee);

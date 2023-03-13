@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 public class Controller {
 
     private final EmployeeService employeeService;
-    //private final EmployeeConverter converter;
 
     //Операция сохранения юзера в базу данных
     @PostMapping("/users")
@@ -61,7 +60,7 @@ public class Controller {
     public Page<EmployeeReadDto> getPage(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "5") int size) {
         Pageable paging = PageRequest.of(page, size);
-        return  EmployeeMapper.employeeToEmployeeReadDto(employeeService.getAllWithPagination(paging));
+        return  EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.getAllWithPagination(paging));
     }
 
     //Получения юзера по id
@@ -82,14 +81,14 @@ public class Controller {
     //Обновление юзера
     @PutMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeReadDto refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody EmployeeForPatchDto employee) {
+    public EmployeeReadDto refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeForPatchDto employee) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.repostById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));
     }
 
     @PatchMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeReadDto refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody EmployeeForPatchDto employee) {
+    public EmployeeReadDto refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeForPatchDto employee) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.patchById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));
     }

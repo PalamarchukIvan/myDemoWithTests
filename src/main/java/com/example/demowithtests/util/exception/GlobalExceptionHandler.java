@@ -6,8 +6,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.validation.ConstraintDefinitionException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +37,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
         List<String> errors = new ArrayList<>();
         for (FieldError f : ex.getFieldErrors()) {
