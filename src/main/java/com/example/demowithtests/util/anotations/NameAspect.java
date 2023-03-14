@@ -8,10 +8,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Aspect
 @Component
@@ -40,33 +41,42 @@ public class NameAspect {
         }
         if(parameter == null) throw new BadParametersInActivateMyAnnotationException();
 
-        Field employeeField = findAnnotatedField(entity.getDeclaredFields()) ;
-        if(employeeField == null) throw new BadParametersInActivateMyAnnotationException();
+        List<Field> entityField = findAnnotatedField(entity.getDeclaredFields());
+        if(entityField.isEmpty()) throw new BadParametersInActivateMyAnnotationException();
 
-        Field toEditField = findFieldByName(parameter.getClass(), employeeField.getName());
-        if(toEditField == null) throw new AnnotatedFieldIsAbsentException();
+        List<Field> toEditFields = findFieldByName(parameter.getClass(), entityField);
+        if(toEditFields.size() != entityField.size()) {
+            System.err.println(toEditFields.size() + " " + entityField.size());
+            throw new AnnotatedFieldIsAbsentException();
+        }
 
-        toEditField.setAccessible(true);
-        toEditField.set(parameter, toName((String)toEditField.get(parameter)));
+        for (Field f : toEditFields) {
+            f.setAccessible(true);
+            System.err.println("parameter:" + (String)f.get(parameter));
+            f.set(parameter, toName((String)f.get(parameter)));
+        }
         return joinPoint.proceed();
     }
-    private Field findAnnotatedField(Field[] fields) {
+    private List<Field> findAnnotatedField(Field[] fields) {
+        List<Field> resultField = new ArrayList<>();
         for (Field f : fields) {
             if(Arrays.stream(f.getDeclaredAnnotations()).anyMatch(a -> a instanceof Name)){
-                return f;
+                resultField.add(f);
             }
         }
-        return null;
+        return resultField;
     }
 
-    private Field findFieldByName(Class<?> clazz, String name){
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            if(field.getName().equals(name)){
-                return field;
-            }
+    private List<Field> findFieldByName(Class<?> clazz, List<Field> targetFields){
+        List<String> names = new ArrayList<>();
+        for (Field targetField : targetFields) {
+            names.add(targetField.getName());
         }
-        return null;
+        System.err.println(names);
+        List<Field> fields = new ArrayList<>(List.of(clazz.getDeclaredFields()));
+        fields.removeIf(f -> !names.contains(f.getName()));
+        System.err.println("fields: " + fields);
+        return fields;
     }
 
     private String toName(String name) {
