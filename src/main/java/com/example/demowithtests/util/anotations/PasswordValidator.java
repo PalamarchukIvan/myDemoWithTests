@@ -1,4 +1,4 @@
-package com.example.demowithtests.anotations;
+package com.example.demowithtests.util.anotations;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -12,6 +12,6 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return s.matches(regexp);
+        return s == null || s.matches(regexp);
     }
 }

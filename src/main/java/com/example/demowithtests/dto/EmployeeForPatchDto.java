@@ -1,7 +1,7 @@
 package com.example.demowithtests.dto;
 
-import com.example.demowithtests.anotations.Password;
-import com.example.demowithtests.anotations.Phone;
+import com.example.demowithtests.util.anotations.Password;
+import com.example.demowithtests.util.anotations.Phone;
 import com.example.demowithtests.domain.Gender;
 
 import javax.validation.constraints.Email;

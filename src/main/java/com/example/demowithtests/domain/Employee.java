@@ -1,5 +1,6 @@
 package com.example.demowithtests.domain;
 
+import com.example.demowithtests.util.anotations.Name;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,11 +15,13 @@ import java.util.Set;
 @Setter
 @Getter
 @Builder
+@ToString
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Exclude
     private Integer id;
+    @Name
     private String name;
     private String country;
     private String email;

@@ -1,13 +1,10 @@
 package com.example.demowithtests.dto;
 
-import com.example.demowithtests.anotations.Password;
-import com.example.demowithtests.anotations.Phone;
-import com.example.demowithtests.domain.Address;
+import com.example.demowithtests.util.anotations.Password;
+import com.example.demowithtests.util.anotations.Phone;
 import com.example.demowithtests.domain.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 
-import javax.swing.text.StyledEditorKit;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

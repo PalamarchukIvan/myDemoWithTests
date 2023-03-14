@@ -1,5 +1,6 @@
 package com.example.demowithtests.web;
 
+import com.example.demowithtests.util.anotations.ActivateMyAnnotations;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeForPatchDto;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -44,8 +44,11 @@ public class Controller {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
-    public EmployeeReadDto saveEmployee(@RequestBody @Valid EmployeeDto requestForSave) {
+    @ActivateMyAnnotations(entity = Employee.class, dto = EmployeeDto.class)
+    public EmployeeReadDto saveEmployee( @RequestBody @Valid EmployeeDto requestForSave) {
+        System.err.println("Enter actual method");
         var employee = EmployeeMapper.INSTANCE.employeeDtoToEmployee(requestForSave);
+        System.err.println("Returning from actual method");
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
     }
 

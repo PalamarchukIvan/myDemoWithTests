@@ -27,6 +27,7 @@ public interface EmployeeMapper {
     EmployeeForPatchDto employeeToEmployeeForPatchDto(Employee employee);
     Employee employeeDtoToEmployee(EmployeeDto employeeDto);
     Employee employeeForPatchDtoToEmployee(EmployeeForPatchDto employee);
+    Employee employeeReadDtoToEmployee(EmployeeReadDto employeeReadDto);
     Set<AddressDto> addressToAddressDto(Set<Address> address);
     Address addressDtoToAddress(AddressDto address);
 }

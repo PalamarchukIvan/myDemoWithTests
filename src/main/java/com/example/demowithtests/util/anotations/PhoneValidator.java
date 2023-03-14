@@ -1,4 +1,4 @@
-package com.example.demowithtests.anotations;
+package com.example.demowithtests.util.anotations;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -12,7 +12,7 @@ public class PhoneValidator implements ConstraintValidator<Phone, String> {
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        System.err.println(from);
+        if(s == null) return true;
         if(!s.matches("[0-9+]+")) return false;//проверяет нет ли символов,кроме цифр и +
 
         switch (from) {
