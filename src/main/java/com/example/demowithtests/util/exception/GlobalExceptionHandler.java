@@ -36,6 +36,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(BadParametersInActivateMyAnnotationException.class)
+    public ResponseEntity<?> handleBadParametersInActivateMyAnnotationException(Exception ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), "bad parameters in @ActivateMuAnnotations(entity= dto=)", request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {

@@ -1,5 +1,6 @@
 package com.example.demowithtests.util.anotations;
 
+import com.example.demowithtests.util.exception.BadParametersInActivateMyAnnotationException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,7 +14,6 @@ import java.util.Arrays;
 @Aspect
 @Component
 public class NameAspect {
-    private Class<?> mainClass;
     @Pointcut(value = "@annotation(com.example.demowithtests.util.anotations.ActivateMyAnnotations)")
     public void settingNamePointCut(){}
 
@@ -28,14 +28,17 @@ public class NameAspect {
         Method declaredIn = declaredFrom.getDeclaredMethod(joinPoint.getSignature().getName(), parametersClass);
         Class<?> entity = declaredIn.getAnnotation(ActivateMyAnnotations.class).entity();
         Class<?> dto = declaredIn.getAnnotation(ActivateMyAnnotations.class).dto();
+
         Object[] args = joinPoint.getArgs();
-        Object parameter = new Object();
+        Object parameter = null;
         for (Object arg : args) {
             if(arg.getClass() == dto){
                 parameter = arg;
             }
         }
-        //System.err.println("o :" + joinPoint.getArgs()[0].getClass());
+        if(parameter == null){
+            throw new BadParametersInActivateMyAnnotationException();
+        }
         Field[] employeeField = entity.getDeclaredFields();
         for (Field f : employeeField) {
             if(Arrays.stream(f.getDeclaredAnnotations()).anyMatch(a -> a instanceof Name)){
