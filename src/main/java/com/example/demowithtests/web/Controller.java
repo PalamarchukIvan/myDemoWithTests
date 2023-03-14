@@ -46,9 +46,7 @@ public class Controller {
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
     @ActivateMyAnnotations(entity = Employee.class, dto = EmployeeDto.class)
     public EmployeeReadDto saveEmployee( @RequestBody @Valid EmployeeDto requestForSave) {
-        System.err.println("Enter actual method");
         var employee = EmployeeMapper.INSTANCE.employeeDtoToEmployee(requestForSave);
-        System.err.println("Returning from actual method");
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
     }
 
