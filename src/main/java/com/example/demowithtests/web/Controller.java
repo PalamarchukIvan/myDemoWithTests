@@ -84,6 +84,7 @@ public class Controller {
     //Обновление юзера
     @PutMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @ActivateMyAnnotations(entity = Employee.class, dto = EmployeeForPatchDto.class)
     public EmployeeReadDto refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeForPatchDto employee) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.repostById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));
@@ -91,6 +92,7 @@ public class Controller {
 
     @PatchMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @ActivateMyAnnotations(entity = Employee.class, dto = EmployeeForPatchDto.class)
     public EmployeeReadDto refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeForPatchDto employee) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.patchById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));
