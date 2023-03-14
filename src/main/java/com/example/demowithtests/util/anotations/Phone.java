@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PhoneValidator.class)
 public @interface Phone {
     Country from() default Country.ANY;
-    String message() default "Phone must start with '+', and be according to specified standard";
+    String message() default "Phone number must start with '+', and be according to specified standard";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     enum Country{
