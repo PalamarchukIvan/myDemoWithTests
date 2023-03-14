@@ -45,18 +45,15 @@ public class NameAspect {
         if(entityField.isEmpty()) throw new BadParametersInActivateMyAnnotationException();
 
         List<Field> toEditFields = findFieldByName(parameter.getClass(), entityField);
-        if(toEditFields.size() != entityField.size()) {
-            System.err.println(toEditFields.size() + " " + entityField.size());
-            throw new AnnotatedFieldIsAbsentException();
-        }
+        if(toEditFields.size() != entityField.size()) throw new AnnotatedFieldIsAbsentException();
 
         for (Field f : toEditFields) {
             f.setAccessible(true);
-            System.err.println("parameter:" + (String)f.get(parameter));
             f.set(parameter, toName((String)f.get(parameter)));
         }
         return joinPoint.proceed();
     }
+
     private List<Field> findAnnotatedField(Field[] fields) {
         List<Field> resultField = new ArrayList<>();
         for (Field f : fields) {
@@ -72,10 +69,8 @@ public class NameAspect {
         for (Field targetField : targetFields) {
             names.add(targetField.getName());
         }
-        System.err.println(names);
         List<Field> fields = new ArrayList<>(List.of(clazz.getDeclaredFields()));
         fields.removeIf(f -> !names.contains(f.getName()));
-        System.err.println("fields: " + fields);
         return fields;
     }
 
