@@ -1,5 +1,6 @@
 package com.example.demowithtests.util.anotations;
 
+import com.example.demowithtests.util.exception.AnnotatedFieldIsAbsentException;
 import com.example.demowithtests.util.exception.BadParametersInActivateMyAnnotationException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -7,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -36,22 +38,35 @@ public class NameAspect {
                 parameter = arg;
             }
         }
-        if(parameter == null){
-            throw new BadParametersInActivateMyAnnotationException();
-        }
-        Field[] employeeField = entity.getDeclaredFields();
-        for (Field f : employeeField) {
+        if(parameter == null) throw new BadParametersInActivateMyAnnotationException();
+
+        Field employeeField = findAnnotatedField(entity.getDeclaredFields()) ;
+        if(employeeField == null) throw new BadParametersInActivateMyAnnotationException();
+
+        Field toEditField = findFieldByName(parameter.getClass(), employeeField.getName());
+        if(toEditField == null) throw new AnnotatedFieldIsAbsentException();
+
+        toEditField.setAccessible(true);
+        toEditField.set(parameter, toName((String)toEditField.get(parameter)));
+        return joinPoint.proceed();
+    }
+    private Field findAnnotatedField(Field[] fields) {
+        for (Field f : fields) {
             if(Arrays.stream(f.getDeclaredAnnotations()).anyMatch(a -> a instanceof Name)){
-                Field[] employeeDtoFields = parameter.getClass().getDeclaredFields();
-                for (Field filed : employeeDtoFields) {
-                    if(filed.getName().equals(f.getName())){
-                        filed.setAccessible(true);
-                        filed.set(parameter, toName((String)filed.get(parameter)));
-                    }
-                }
+                return f;
             }
         }
-        return joinPoint.proceed();
+        return null;
+    }
+
+    private Field findFieldByName(Class<?> clazz, String name){
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if(field.getName().equals(name)){
+                return field;
+            }
+        }
+        return null;
     }
 
     private String toName(String name) {
