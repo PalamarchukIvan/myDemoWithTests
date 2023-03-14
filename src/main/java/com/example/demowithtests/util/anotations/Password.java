@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface Password {
     String regex() default "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$";//1 цирфа, 1 буква латинксого алфавита, длина 6+
-    String message() default "Password must be 6+ characters long";
+    String message() default "Password must be 6+ characters long, contain 1 Latin character and 1 number";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
