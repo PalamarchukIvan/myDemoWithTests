@@ -7,10 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
-import javax.validation.ConstraintDefinitionException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,23 +33,6 @@ public class GlobalExceptionHandler {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), "BackEnd is dead", request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    @ExceptionHandler(BadParametersInActivateMyAnnotationException.class)
-    public ResponseEntity<?> handleBadParametersInActivateMyAnnotationException(Exception ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(),
-                "bad parameters in @ActivateMuAnnotations(entity= dto= )",
-                request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(AnnotatedFieldIsAbsentException.class)
-    public ResponseEntity<?> handleAnnotatedFieldIsAbsentException(Exception ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(),
-                "There is no such field such in dto, that is annotated @Name in entity",
-                request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {

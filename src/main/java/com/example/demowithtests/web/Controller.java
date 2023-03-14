@@ -1,6 +1,6 @@
 package com.example.demowithtests.web;
 
-import com.example.demowithtests.util.anotations.ActivateMyAnnotations;
+import com.example.demowithtests.util.anotations.deprecated.ActivateMyAnnotations;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeForPatchDto;
@@ -44,7 +44,6 @@ public class Controller {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
-    @ActivateMyAnnotations(entity = Employee.class, dto = EmployeeDto.class)
     public EmployeeReadDto saveEmployee( @RequestBody @Valid EmployeeDto requestForSave) {
         var employee = EmployeeMapper.INSTANCE.employeeDtoToEmployee(requestForSave);
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
@@ -82,7 +81,6 @@ public class Controller {
     //Обновление юзера
     @PutMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @ActivateMyAnnotations(entity = Employee.class, dto = EmployeeForPatchDto.class)
     public EmployeeReadDto refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeForPatchDto employee) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.repostById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));
@@ -90,7 +88,6 @@ public class Controller {
 
     @PatchMapping("/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @ActivateMyAnnotations(entity = Employee.class, dto = EmployeeForPatchDto.class)
     public EmployeeReadDto refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeForPatchDto employee) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.patchById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));

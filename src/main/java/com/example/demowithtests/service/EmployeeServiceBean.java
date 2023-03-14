@@ -4,6 +4,9 @@ import com.example.demowithtests.domain.Address;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.repository.EmployeeRepository;
+import com.example.demowithtests.util.anotations.InitMyAnnotations;
+import com.example.demowithtests.util.anotations.Name;
+import com.example.demowithtests.util.anotations.ShortenCountry;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public class EmployeeServiceBean implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Override
+    @InitMyAnnotations(annotations = {Name.class, ShortenCountry.class})
     public Employee create(Employee employee) {
         return employeeRepository.save(employee);
     }
@@ -47,6 +49,7 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
+    @InitMyAnnotations(annotations = {Name.class})
     public Employee repostById(Integer id, Employee employee) {
         var entity = employeeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         if (entity.equals(employee)) {
@@ -64,6 +67,7 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
+    @InitMyAnnotations(annotations = {Name.class})
     public Employee patchById(Integer id, Employee employee) {
         return employeeRepository.findById(id)
                 .map(entity -> {

@@ -1,6 +1,7 @@
 package com.example.demowithtests.domain;
 
 import com.example.demowithtests.util.anotations.Name;
+import com.example.demowithtests.util.anotations.ShortenCountry;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class Employee {
     private Integer id;
     @Name
     private String name;
+    @ShortenCountry
     private String country;
     private String email;
     private String phone;

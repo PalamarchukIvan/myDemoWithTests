@@ -1,12 +1,9 @@
-package com.example.demowithtests.util.anotations;
+package com.example.demowithtests.util.anotations.deprecated;
 
-import com.example.demowithtests.util.exception.AnnotatedFieldIsAbsentException;
-import com.example.demowithtests.util.exception.BadParametersInActivateMyAnnotationException;
+import com.example.demowithtests.util.anotations.Name;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -14,10 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Aspect
-@Component
+@Deprecated
 public class NameAspect {
-    @Pointcut(value = "@annotation(com.example.demowithtests.util.anotations.ActivateMyAnnotations)")
+    @Pointcut(value = "@annotation(com.example.demowithtests.util.anotations.deprecated.ActivateMyAnnotations)")
     public void settingNamePointCut(){}
 
     @Around(value = "settingNamePointCut()")
@@ -39,13 +35,13 @@ public class NameAspect {
                 parameter = arg;
             }
         }
-        if(parameter == null) throw new BadParametersInActivateMyAnnotationException();
+        //if(parameter == null) throw new BadParametersInActivateMyAnnotationException();
 
         List<Field> entityField = findAnnotatedField(entity.getDeclaredFields());
-        if(entityField.isEmpty()) throw new BadParametersInActivateMyAnnotationException();
+        //if(entityField.isEmpty()) throw new BadParametersInActivateMyAnnotationException();
 
         List<Field> toEditFields = findFieldByName(parameter.getClass(), entityField);
-        if(toEditFields.size() != entityField.size()) throw new AnnotatedFieldIsAbsentException();
+        //if(toEditFields.size() != entityField.size()) throw new AnnotatedFieldIsAbsentException();
 
         for (Field f : toEditFields) {
             f.setAccessible(true);
@@ -57,7 +53,7 @@ public class NameAspect {
     private List<Field> findAnnotatedField(Field[] fields) {
         List<Field> resultField = new ArrayList<>();
         for (Field f : fields) {
-            if(Arrays.stream(f.getDeclaredAnnotations()).anyMatch(a -> a instanceof Name)){
+            if(Arrays.stream(f.getDeclaredAnnotations()).anyMatch(a -> a instanceof Name) && f.getType() == String.class){
                 resultField.add(f);
             }
         }
