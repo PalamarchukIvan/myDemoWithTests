@@ -38,7 +38,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadParametersInActivateMyAnnotationException.class)
     public ResponseEntity<?> handleBadParametersInActivateMyAnnotationException(Exception ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), "bad parameters in @ActivateMuAnnotations(entity= dto=)", request.getDescription(false));
+        ErrorDetails errorDetails = new ErrorDetails(new Date(),
+                "bad parameters in @ActivateMuAnnotations(entity= dto= )",
+                request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AnnotatedFieldIsAbsentException.class)
+    public ResponseEntity<?> handleAnnotatedFieldIsAbsentException(Exception ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(),
+                "There is no such field such in dto, that is annotated @Name in entity",
+                request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
