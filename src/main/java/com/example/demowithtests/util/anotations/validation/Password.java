@@ -1,4 +1,4 @@
-package com.example.demowithtests.util.anotations;
+package com.example.demowithtests.util.anotations.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

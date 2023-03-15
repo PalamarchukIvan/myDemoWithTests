@@ -1,7 +1,7 @@
 package com.example.demowithtests.dto;
 
-import com.example.demowithtests.util.anotations.Password;
-import com.example.demowithtests.util.anotations.Phone;
+import com.example.demowithtests.util.anotations.validation.Password;
+import com.example.demowithtests.util.anotations.validation.Phone;
 import com.example.demowithtests.domain.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 

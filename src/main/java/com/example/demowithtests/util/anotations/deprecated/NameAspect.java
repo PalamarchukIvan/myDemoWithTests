@@ -1,9 +1,9 @@
 package com.example.demowithtests.util.anotations.deprecated;
 
-import com.example.demowithtests.util.anotations.Name;
+import com.example.demowithtests.util.anotations.formatingAnnotations.Name;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -12,13 +12,15 @@ import java.util.Arrays;
 import java.util.List;
 
 @Deprecated
+@Aspect
+@Component
 public class NameAspect {
-    @Pointcut(value = "@annotation(com.example.demowithtests.util.anotations.deprecated.ActivateMyAnnotations)")
+    @Pointcut(value = "@annotation(ActivateMyAnnotations)")
     public void settingNamePointCut(){}
 
     @Around(value = "settingNamePointCut()")
     public Object formatName(ProceedingJoinPoint joinPoint) throws Throwable {
-        Class<?> declaredFrom = joinPoint.getSignature().getDeclaringType();
+        Class<?> declaredFrom = joinPoint.getSignature().getDeclaringType(); //Controller
         Class<?>[] parametersClass = new Class[joinPoint.getArgs().length];
         for (int i = 0; i < parametersClass.length; i++) {
             parametersClass[i] = joinPoint.getArgs()[i].getClass();

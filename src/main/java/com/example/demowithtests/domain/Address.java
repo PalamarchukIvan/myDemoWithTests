@@ -1,10 +1,9 @@
 package com.example.demowithtests.domain;
 
+import com.example.demowithtests.util.anotations.formatingAnnotations.ShortenCountry;
 import lombok.*;
-import org.apache.commons.lang3.builder.EqualsExclude;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -24,6 +23,7 @@ public class Address {
     @Column(name = "address_has_active")
     private Boolean addressHasActive = Boolean.TRUE;
     @Column(name = "country")
+    @ShortenCountry
     private String country;
     @Column(name = "city")
     private String city;

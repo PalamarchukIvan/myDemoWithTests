@@ -4,9 +4,9 @@ import com.example.demowithtests.domain.Address;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Gender;
 import com.example.demowithtests.repository.EmployeeRepository;
-import com.example.demowithtests.util.anotations.InitMyAnnotations;
-import com.example.demowithtests.util.anotations.Name;
-import com.example.demowithtests.util.anotations.ShortenCountry;
+import com.example.demowithtests.util.anotations.formatingAnnotations.InitMyAnnotations;
+import com.example.demowithtests.util.anotations.formatingAnnotations.Name;
+import com.example.demowithtests.util.anotations.formatingAnnotations.ShortenCountry;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class EmployeeServiceBean implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Override
-    @InitMyAnnotations(annotations = {Name.class, ShortenCountry.class})
+    @InitMyAnnotations
     public Employee create(Employee employee) {
         return employeeRepository.save(employee);
     }

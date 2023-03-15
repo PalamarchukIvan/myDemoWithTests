@@ -1,4 +1,4 @@
-package com.example.demowithtests.util.anotations;
+package com.example.demowithtests.util.anotations.formatingAnnotations;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -8,15 +8,13 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InaccessibleObjectException;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 @Aspect
 @Component
 public class MyAnnotationsAspect {
-    @Pointcut(value = "@annotation(com.example.demowithtests.util.anotations.InitMyAnnotations)")
+    @Pointcut(value = "@annotation(InitMyAnnotations)")
     public void settingNamePointCut() {}
 
     @Around(value = "settingNamePointCut()")
@@ -33,49 +31,28 @@ public class MyAnnotationsAspect {
 
     private void applyAnnotationsOnObject(Object input, List<Class<?>> workingAnnotations) throws IllegalAccessException {
         if(input instanceof Collection){
-            Collection args = (Collection) input;
+            Collection<?> args = (Collection<?>) input;
             for (Object arg : args) {
-                for (Field field : arg.getClass().getDeclaredFields()) {
-                    try {
-                        field.setAccessible(true);
-                        if(!(field.get(arg) instanceof Collection) && !field.getClass().isArray()){
-                            applyAnnotationsOnField(workingAnnotations, arg, field);
-                        }
-                        else{
-                            applyAnnotationsOnObject(field.get(arg), workingAnnotations);
-                        }
-                    } catch (InaccessibleObjectException e){
-                        System.err.println("Stop " + e.getMessage());
-                    }
-                }
+                goThroughFields(arg, workingAnnotations);
             }
         } else if(input instanceof Object[]){
             Object[] args = (Object[]) input;
             for (Object arg : args) {
-                for (Field field : arg.getClass().getDeclaredFields()) {
-                    try {
-                        field.setAccessible(true);
-                        if(!(field.get(arg) instanceof Collection) && !field.getClass().isArray()){
-                            applyAnnotationsOnField(workingAnnotations, arg, field);
-                        }
-                        else{
-                            applyAnnotationsOnObject(field.get(arg), workingAnnotations);
-                        }
-                    } catch (InaccessibleObjectException e){
-                        System.err.println("Stop");
-                    }
-                }
+                goThroughFields(arg, workingAnnotations);
             }
         } else{
-            for (Field field : input.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                if(!(field.get(input) instanceof Collection) && !field.getClass().isArray()){
-                    System.err.println("applying for object in object " + field.get(input));
-                    applyAnnotationsOnField(workingAnnotations, input, field);
-                }
-                else{
-                    applyAnnotationsOnObject(field.get(input), workingAnnotations);
-                }
+            goThroughFields(input, workingAnnotations);
+        }
+    }
+
+    private void goThroughFields(Object arg, List<Class<?>> workingAnnotations) throws IllegalAccessException {
+        for (Field field : arg.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            if(!(field.get(arg) instanceof Collection) && !field.getClass().isArray()){
+                applyAnnotationsOnField(workingAnnotations, arg, field);
+            }
+            else{
+                applyAnnotationsOnObject(field.get(arg), workingAnnotations);
             }
         }
     }

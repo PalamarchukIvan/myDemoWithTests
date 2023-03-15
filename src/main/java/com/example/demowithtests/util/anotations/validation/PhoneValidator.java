@@ -1,4 +1,4 @@
-package com.example.demowithtests.util.anotations;
+package com.example.demowithtests.util.anotations.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

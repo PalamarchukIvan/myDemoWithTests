@@ -1,7 +1,7 @@
 package com.example.demowithtests.domain;
 
-import com.example.demowithtests.util.anotations.Name;
-import com.example.demowithtests.util.anotations.ShortenCountry;
+import com.example.demowithtests.util.anotations.formatingAnnotations.Name;
+import com.example.demowithtests.util.anotations.formatingAnnotations.ShortenCountry;
 import lombok.*;
 
 import javax.persistence.*;
