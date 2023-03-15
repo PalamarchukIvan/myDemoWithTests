@@ -8,7 +8,9 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Aspect
@@ -24,30 +26,66 @@ public class MyAnnotationsAspect {
         List<Class<?>> workingAnnotations = List.of(initAnnotation.annotations());
 
         for (Object arg : joinPoint.getArgs()) {
-            for (Field argField : arg.getClass().getDeclaredFields()) {
-                argField.setAccessible(true);
-                if(argField.get(arg) instanceof Collection){
-                    for (Object innerArgs : (Collection) argField.get(arg)) {
-                        for (Field innerFields : innerArgs.getClass().getDeclaredFields()){
-                            innerFields.setAccessible(true);
-                            applyAnnotations(workingAnnotations, innerArgs, innerFields);
-                        }
-                    }
-                }
-                else {
-                    applyAnnotations(workingAnnotations, arg, argField);
-                }
-            }
+            applyAnnotationsOnObject(arg, workingAnnotations);
         }
         return joinPoint.proceed();
     }
 
-    private void applyAnnotations(List<Class<?>> workingAnnotations, Object innerArgs, Field innerFields) throws IllegalAccessException {
-        if (innerFields.isAnnotationPresent(Name.class) && workingAnnotations.contains(Name.class)) {
-            if (innerFields.get(innerArgs) instanceof String) innerFields.set(innerArgs, toName((String) innerFields.get(innerArgs)));
+    private void applyAnnotationsOnObject(Object input, List<Class<?>> workingAnnotations) throws IllegalAccessException {
+        if(input instanceof Collection){
+            Collection args = (Collection) input;
+            for (Object arg : args) {
+                for (Field field : arg.getClass().getDeclaredFields()) {
+                    try {
+                        field.setAccessible(true);
+                        if(!(field.get(arg) instanceof Collection) && !field.getClass().isArray()){
+                            applyAnnotationsOnField(workingAnnotations, arg, field);
+                        }
+                        else{
+                            applyAnnotationsOnObject(field.get(arg), workingAnnotations);
+                        }
+                    } catch (InaccessibleObjectException e){
+                        System.err.println("Stop " + e.getMessage());
+                    }
+                }
+            }
+        } else if(input instanceof Object[]){
+            Object[] args = (Object[]) input;
+            for (Object arg : args) {
+                for (Field field : arg.getClass().getDeclaredFields()) {
+                    try {
+                        field.setAccessible(true);
+                        if(!(field.get(arg) instanceof Collection) && !field.getClass().isArray()){
+                            applyAnnotationsOnField(workingAnnotations, arg, field);
+                        }
+                        else{
+                            applyAnnotationsOnObject(field.get(arg), workingAnnotations);
+                        }
+                    } catch (InaccessibleObjectException e){
+                        System.err.println("Stop");
+                    }
+                }
+            }
+        } else{
+            for (Field field : input.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                if(!(field.get(input) instanceof Collection) && !field.getClass().isArray()){
+                    System.err.println("applying for object in object " + field.get(input));
+                    applyAnnotationsOnField(workingAnnotations, input, field);
+                }
+                else{
+                    applyAnnotationsOnObject(field.get(input), workingAnnotations);
+                }
+            }
         }
-        if (innerFields.isAnnotationPresent(ShortenCountry.class) && workingAnnotations.contains(ShortenCountry.class)) {
-            if (innerFields.get(innerArgs) instanceof String) innerFields.set(innerArgs, toShortenCountry((String) innerFields.get(innerArgs)));
+    }
+
+    private void applyAnnotationsOnField(List<Class<?>> workingAnnotations, Object arg, Field fields) throws IllegalAccessException {
+        if (fields.isAnnotationPresent(Name.class) && workingAnnotations.contains(Name.class)) {
+            if (fields.get(arg) instanceof String) fields.set(arg, toName((String) fields.get(arg)));
+        }
+        if (fields.isAnnotationPresent(ShortenCountry.class) && workingAnnotations.contains(ShortenCountry.class)) {
+            if (fields.get(arg) instanceof String) fields.set(arg, toShortenCountry((String) fields.get(arg)));
         }
     }
 
