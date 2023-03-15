@@ -8,6 +8,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 
 @Aspect
@@ -24,17 +25,30 @@ public class MyAnnotationsAspect {
 
         for (Object arg : joinPoint.getArgs()) {
             for (Field argField : arg.getClass().getDeclaredFields()) {
-                if (argField.isAnnotationPresent(Name.class) && workingAnnotations.contains(Name.class)) {
-                    argField.setAccessible(true);
-                    if(argField.get(arg) instanceof String) argField.set(arg, toName((String) argField.get(arg)));
+                argField.setAccessible(true);
+                if(argField.get(arg) instanceof Collection){
+                    for (Object innerArgs : (Collection) argField.get(arg)) {
+                        for (Field innerFields : innerArgs.getClass().getDeclaredFields()){
+                            innerFields.setAccessible(true);
+                            applyAnnotations(workingAnnotations, innerArgs, innerFields);
+                        }
+                    }
                 }
-                if (argField.isAnnotationPresent(ShortenCountry.class) && workingAnnotations.contains(ShortenCountry.class)) {
-                    argField.setAccessible(true);
-                    if(argField.get(arg) instanceof String) argField.set(arg, toShortenCountry((String) argField.get(arg)));
+                else {
+                    applyAnnotations(workingAnnotations, arg, argField);
                 }
             }
         }
         return joinPoint.proceed();
+    }
+
+    private void applyAnnotations(List<Class<?>> workingAnnotations, Object innerArgs, Field innerFields) throws IllegalAccessException {
+        if (innerFields.isAnnotationPresent(Name.class) && workingAnnotations.contains(Name.class)) {
+            if (innerFields.get(innerArgs) instanceof String) innerFields.set(innerArgs, toName((String) innerFields.get(innerArgs)));
+        }
+        if (innerFields.isAnnotationPresent(ShortenCountry.class) && workingAnnotations.contains(ShortenCountry.class)) {
+            if (innerFields.get(innerArgs) instanceof String) innerFields.set(innerArgs, toShortenCountry((String) innerFields.get(innerArgs)));
+        }
     }
 
     private String toName(String name) {
