@@ -44,7 +44,6 @@ public class Controller {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
-    @ActivateMyAnnotations(dto = EmployeeDto.class, entity = Employee.class)
     public EmployeeReadDto saveEmployee( @RequestBody @Valid EmployeeDto requestForSave) {
         var employee = EmployeeMapper.INSTANCE.employeeDtoToEmployee(requestForSave);
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
