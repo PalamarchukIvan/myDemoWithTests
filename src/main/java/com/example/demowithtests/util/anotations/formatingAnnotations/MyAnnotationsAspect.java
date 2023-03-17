@@ -57,7 +57,9 @@ public class MyAnnotationsAspect {
                 else{
                     applyAnnotationsOnObject(field.get(arg), workingAnnotations);
                 }
-            } catch (InaccessibleObjectException ignored){}
+            } catch (InaccessibleObjectException e){
+                break;
+            }
 
         }
     }

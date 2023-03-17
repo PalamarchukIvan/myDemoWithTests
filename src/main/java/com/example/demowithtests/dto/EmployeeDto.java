@@ -1,16 +1,18 @@
 package com.example.demowithtests.dto;
 
+import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.util.anotations.validation.Password;
 import com.example.demowithtests.util.anotations.validation.Phone;
 import com.example.demowithtests.domain.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.ToString;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
-
+@ToString
 public class EmployeeDto {
 
     public Integer id;
@@ -28,6 +30,7 @@ public class EmployeeDto {
     @Phone(from = Phone.Country.UKRAINE)
     public String phone;
     public Set<AddressDto> addresses = new HashSet<>();
+    public Set<PhotoDto> photos = new HashSet<>();
     public Gender gender;
     public Boolean isPrivate = Boolean.FALSE;
     @Password

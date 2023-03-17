@@ -18,6 +18,7 @@ public class EmployeeForPatchDto {
     @Phone
     public String phone;
     public Set<AddressDto> addresses;
+    public Set<PhotoDto> photos;
     public Gender gender;
     public Boolean isPrivate = Boolean.FALSE;
     @Password

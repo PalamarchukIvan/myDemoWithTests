@@ -3,6 +3,7 @@ package com.example.demowithtests.service;
 import com.example.demowithtests.domain.Address;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Gender;
+import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.util.anotations.formatingAnnotations.InitMyAnnotations;
 import com.example.demowithtests.util.anotations.formatingAnnotations.Name;
@@ -63,6 +64,7 @@ public class EmployeeServiceBean implements EmployeeService {
         entity.setAddresses(employee.getAddresses());
         entity.setPhone(employee.getPhone());
         entity.setPassword(employee.getPassword());
+        entity.setPhotos(employee.getPhotos());
         return employeeRepository.save(entity);
     }
 
@@ -97,6 +99,10 @@ public class EmployeeServiceBean implements EmployeeService {
 
                     if (employee.getPhone() != null && !entity.getPhone().equals(employee.getPhone()))
                         entity.setPhone(employee.getPhone());
+
+                    if (employee.getPhotos() != null && !entity.getPhotos().equals(employee.getPhotos())) {
+                        entity.setPhotos(employee.getPhotos());
+                    }
                     return employeeRepository.save(entity);
                 })
                 .orElseThrow(ResourceNotFoundException::new);
@@ -138,7 +144,6 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public List<String> getAllEmployeeCountry() {
-        log.info("getAllEmployeeCountry() - start:");
         List<Employee> employeeList = employeeRepository.findAll();
         return employeeList.stream()
                 .map(Employee::getCountry)
@@ -213,6 +218,12 @@ public class EmployeeServiceBean implements EmployeeService {
                 .gender((Math.random() * 2 > 1) ? Gender.M : Gender.F)
                 .isPrivate(false)
                 .password("123321")
+                .photos(Set.of(Photo.builder()
+                        .photoUrl("dropBox.com")
+                        .cameraType("android META-INF")
+                        .description("some description")
+                        .build()
+                ))
                 .build();
     }
 
@@ -224,5 +235,6 @@ public class EmployeeServiceBean implements EmployeeService {
         employee.setGender(null);
         employee.setPassword("is private");
         employee.setPhone("is private");
+        employee.setPhotos(null);
     }
 }

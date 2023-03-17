@@ -5,7 +5,6 @@ import lombok.experimental.Accessors;
 import java.time.Instant;
 import java.util.Date;
 
-//@Accessors(chain = true)
 public class AddressDto {
     public Boolean addressHasActive = Boolean.TRUE;
     public String country;

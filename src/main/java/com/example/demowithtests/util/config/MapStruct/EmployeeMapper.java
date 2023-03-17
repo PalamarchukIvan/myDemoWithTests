@@ -2,10 +2,8 @@ package com.example.demowithtests.util.config.MapStruct;
 
 import com.example.demowithtests.domain.Address;
 import com.example.demowithtests.domain.Employee;
-import com.example.demowithtests.dto.AddressDto;
-import com.example.demowithtests.dto.EmployeeDto;
-import com.example.demowithtests.dto.EmployeeForPatchDto;
-import com.example.demowithtests.dto.EmployeeReadDto;
+import com.example.demowithtests.domain.Photo;
+import com.example.demowithtests.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
@@ -30,4 +28,6 @@ public interface EmployeeMapper {
     Employee employeeReadDtoToEmployee(EmployeeReadDto employeeReadDto);
     Set<AddressDto> addressToAddressDto(Set<Address> address);
     Address addressDtoToAddress(AddressDto address);
+    PhotoDto photoToPhotoDto(Photo photo);
+    Photo photoDtoTpPhoto(PhotoDto photo);
 }
