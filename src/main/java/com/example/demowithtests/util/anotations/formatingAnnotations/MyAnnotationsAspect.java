@@ -7,7 +7,9 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,13 +49,16 @@ public class MyAnnotationsAspect {
 
     private void goThroughFields(Object arg, List<Class<?>> workingAnnotations) throws IllegalAccessException {
         for (Field field : arg.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            if(!(field.get(arg) instanceof Collection) && !field.getClass().isArray()){
-                applyAnnotationsOnField(workingAnnotations, arg, field);
-            }
-            else{
-                applyAnnotationsOnObject(field.get(arg), workingAnnotations);
-            }
+            try {
+                field.setAccessible(true);
+                if(!(field.get(arg) instanceof Collection) && !field.getClass().isArray()){
+                    applyAnnotationsOnField(workingAnnotations, arg, field);
+                }
+                else{
+                    applyAnnotationsOnObject(field.get(arg), workingAnnotations);
+                }
+            } catch (InaccessibleObjectException ignored){}
+
         }
     }
 
