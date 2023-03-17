@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -22,7 +23,7 @@ public class Photo {
     private Integer id;
 
     @EqualsAndHashCode.Exclude
-    private Date uploadDate = Date.from(Instant.now());
+    private LocalDate uploadDate = LocalDate.now();
     private String description;
     private String cameraType;
     private String photoUrl;
