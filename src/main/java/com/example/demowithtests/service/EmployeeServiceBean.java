@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -66,6 +68,14 @@ public class EmployeeServiceBean implements EmployeeService {
         entity.setPassword(employee.getPassword());
         entity.setPhotos(employee.getPhotos());
         return employeeRepository.save(entity);
+    }
+
+    @Override
+    public List<Employee> findEmployeesWithExpiredPhotos() {
+        return getAll().stream().filter(employee -> employee.getPhotos()
+                        .stream()
+                        .anyMatch(photo -> photo.getUploadDate().isAfter(LocalDate.now().minusYears(5))))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -179,6 +189,7 @@ public class EmployeeServiceBean implements EmployeeService {
     public List<Employee> findEmployeeIfAddressPresent() {
         return employeeRepository.findEmployeeByPresentAddress();
     }
+
     @Override
     public List<Employee> findEmployeeByPartOfTheName(String letters) {
         return employeeRepository.findEmployeeByPartOfTheName(letters);
@@ -205,7 +216,7 @@ public class EmployeeServiceBean implements EmployeeService {
     private static Employee createRandomEntity(int i) {
         return Employee.builder()
                 .name("test name " + i)
-                .country("test country " +i)
+                .country("test country " + i)
                 .email("testmail@mail.ru")
                 .phone("+380971362935")
                 .addresses((Math.random() * 4 < 2) ? null : Set.of(Address.builder()
