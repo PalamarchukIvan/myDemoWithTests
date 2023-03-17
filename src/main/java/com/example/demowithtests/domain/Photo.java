@@ -27,4 +27,6 @@ public class Photo {
     private String description;
     private String cameraType;
     private String photoUrl;
+    @Column(columnDefinition = "BOOLEAN DEFAULT 'false'")
+    private Boolean isPrivate = Boolean.FALSE;
 }

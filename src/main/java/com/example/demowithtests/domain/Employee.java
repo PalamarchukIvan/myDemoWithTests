@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,7 +35,7 @@ public class Employee {
     private Set<Address> addresses = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id")
-    private Set<Photo> photos = new HashSet<>();
+    private List<Photo> photos = new LinkedList<>();
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column(columnDefinition = "BOOLEAN DEFAULT 'false'")//устанавливает дэфолтное значение false

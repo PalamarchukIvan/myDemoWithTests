@@ -11,4 +11,5 @@ public class PhotoDto {
     public String description;
     public String cameraType;
     public String photoUrl;
+    public Boolean isPrivate = Boolean.FALSE;
 }

@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class EmployeeServiceBean implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final EmailService emailService;
 
     @Override
     @InitMyAnnotations
@@ -74,7 +75,7 @@ public class EmployeeServiceBean implements EmployeeService {
     public List<Employee> findEmployeesWithExpiredPhotos() {
         return getAll().stream().filter(employee -> employee.getPhotos()
                         .stream()
-                        .anyMatch(photo -> photo.getUploadDate().isAfter(LocalDate.now().minusYears(5))))
+                        .anyMatch(photo -> photo.getUploadDate().isBefore(LocalDate.now().minusYears(5)) && !photo.getIsPrivate()))
                 .collect(Collectors.toList());
     }
 
@@ -205,6 +206,24 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
+    public List<Employee> updateEmployeesWithExpiredPhotos() {
+        List<Employee> listExEmployees = findEmployeesWithExpiredPhotos();
+        for (Employee e : listExEmployees) {
+            emailService.sendTestMail(e.getEmail(), "{Company name} to " + e.getName(), "Reminder! \nYour photo is about to expire, you have to renew it!");
+            List<Photo> photos = e.getPhotos();
+            photos.get(photos.size() - 1).setIsPrivate(Boolean.TRUE);
+            e.getPhotos().add(Photo.builder()
+                            .photoUrl("new url")
+                            .cameraType("new camera type")
+                            .description("new description")
+                            .uploadDate(LocalDate.now())
+                            .isPrivate(Boolean.FALSE)
+                            .build());
+        }
+        return employeeRepository.saveAll(listExEmployees);
+    }
+
+    @Override
     public void generateTestDatabase(int numberOfEntities) {
         List<Employee> list = new LinkedList<>();
         for (int i = 0; i < numberOfEntities; i++) {
@@ -229,7 +248,8 @@ public class EmployeeServiceBean implements EmployeeService {
                 .gender((Math.random() * 2 > 1) ? Gender.M : Gender.F)
                 .isPrivate(false)
                 .password("123321")
-                .photos(Set.of(Photo.builder()
+                .photos(List.of(Photo.builder()
+                        .uploadDate(LocalDate.now())
                         .photoUrl("dropBox.com")
                         .cameraType("android META-INF")
                         .description("some description")

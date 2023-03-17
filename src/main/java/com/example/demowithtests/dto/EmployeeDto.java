@@ -10,7 +10,9 @@ import lombok.ToString;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 @ToString
 public class EmployeeDto {
@@ -29,8 +31,9 @@ public class EmployeeDto {
     public String email;
     @Phone(from = Phone.Country.UKRAINE)
     public String phone;
+    @NotNull(message = "Employee must have a photo")
     public Set<AddressDto> addresses = new HashSet<>();
-    public Set<PhotoDto> photos = new HashSet<>();
+    public List<PhotoDto> photos = new ArrayList<>();
     public Gender gender;
     public Boolean isPrivate = Boolean.FALSE;
     @Password

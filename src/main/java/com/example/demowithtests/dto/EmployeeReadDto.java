@@ -7,9 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class EmployeeReadDto {
 
@@ -23,7 +21,7 @@ public class EmployeeReadDto {
     public String email;
     public String phone;
     public Set<AddressDto> addresses = new HashSet<>();
-    public Set<PhotoDto> photos = new HashSet<>();
+    public PhotoDto photos;
     public Date date = Date.from(Instant.now());
     public Gender gender;
 }

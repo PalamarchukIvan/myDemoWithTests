@@ -4,6 +4,7 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeForPatchDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
+import com.example.demowithtests.service.EmailService;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.util.anotations.deprecated.ActivateMyAnnotations;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
@@ -155,5 +156,17 @@ public class Controller {
     @ResponseStatus(HttpStatus.OK)
     public void generateTestSetOfEntities(@PathVariable int number) {
         employeeService.generateTestDatabase(number);
+    }
+
+    @GetMapping("/users/expired_photos")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EmployeeReadDto> getAllWithExpiredPhotos() {
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.findEmployeesWithExpiredPhotos());
+    }
+
+    @GetMapping("/users/notify_photos")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EmployeeReadDto> notifyAllWithExpiredPhotos() {
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.updateEmployeesWithExpiredPhotos());
     }
 }
