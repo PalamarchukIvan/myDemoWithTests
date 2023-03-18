@@ -3,9 +3,7 @@ package com.example.demowithtests.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "photo")

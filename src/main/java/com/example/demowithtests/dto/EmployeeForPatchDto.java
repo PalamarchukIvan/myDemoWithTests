@@ -6,6 +6,7 @@ import com.example.demowithtests.domain.Gender;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Set;
 
 public class EmployeeForPatchDto {
@@ -18,7 +19,7 @@ public class EmployeeForPatchDto {
     @Phone
     public String phone;
     public Set<AddressDto> addresses;
-    public Set<PhotoDto> photos;
+    public List<PhotoDto> photos;
     public Gender gender;
     public Boolean isPrivate = Boolean.FALSE;
     @Password
