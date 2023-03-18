@@ -40,13 +40,14 @@ public interface EmployeeMapper {
         employeeReadDto.email = employee.getEmail();
         employeeReadDto.phone = employee.getPhone();
         employeeReadDto.addresses = addressToAddressDto( employee.getAddresses() );
-        employeeReadDto.photos =  photoToPhotoDto2 (employee.getPhotos().get(employee.getPhotos().size() - 1));
+        if(employee.getPhotos().size() > 0)
+            employeeReadDto.photos =  photoToPhotoDto (employee.getPhotos().get(employee.getPhotos().size() - 1));
         employeeReadDto.gender = employee.getGender();
 
         return employeeReadDto;
     }
 
-    default PhotoDto photoToPhotoDto2(Photo photo) {
+    default PhotoDto photoToPhotoDto(Photo photo) {
         if ( photo == null ) {
             return null;
         }
@@ -57,7 +58,6 @@ public interface EmployeeMapper {
         photoDto.description = photo.getDescription();
         photoDto.cameraType = photo.getCameraType();
         photoDto.photoUrl = photo.getPhotoUrl();
-        photoDto.isPrivate = photo.getIsPrivate();
 
         return photoDto;
     }
@@ -65,10 +65,10 @@ public interface EmployeeMapper {
     default Page<EmployeeReadDto> employeeToEmployeeReadDto(Page<Employee> employeePage){
         return employeePage.map(INSTANCE::employeeToEmployeeReadDto);
     }
+
     Employee employeeDtoToEmployee(EmployeeDto employeeDto);
     Employee employeeForPatchDtoToEmployee(EmployeeForPatchDto employee);
     Set<AddressDto> addressToAddressDto(Set<Address> address);
     Address addressDtoToAddress(AddressDto address);
-    PhotoDto photoToPhotoDto(Photo photo);
     Photo photoDtoTpPhoto(PhotoDto photo);
 }
