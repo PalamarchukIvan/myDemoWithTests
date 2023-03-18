@@ -31,9 +31,10 @@ public class EmployeeDto {
     public String email;
     @Phone(from = Phone.Country.UKRAINE)
     public String phone;
-    @NotNull(message = "Employee must have a photo")
+
     public Set<AddressDto> addresses = new HashSet<>();
-    public List<PhotoDto> photos = new ArrayList<>();
+    @NotNull(message = "Photos may not be null")
+    public List<PhotoDto> photos;
     public Gender gender;
     public Boolean isPrivate = Boolean.FALSE;
     @Password
