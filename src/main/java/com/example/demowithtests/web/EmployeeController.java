@@ -1,10 +1,12 @@
 package com.example.demowithtests.web;
 
+import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeForPatchDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +14,8 @@ import java.util.Optional;
 public interface EmployeeController {
 
     EmployeeReadDto saveEmployee(EmployeeDto requestForSave);
+
+    List<Photo> addPhotoToEmployee(MultipartFile image, Integer id);
 
     //Получение списка юзеров
     List<EmployeeReadDto> getAllUsers();

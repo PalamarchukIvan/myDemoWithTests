@@ -8,7 +8,7 @@ import java.util.Date;
 @ToString
 public class PhotoDto {
     public LocalDate uploadDate = LocalDate.now();
-    public String description;
-    public String cameraType;
-    public String photoUrl;
+    public String path;
+    public String name;
+    public String format;
 }

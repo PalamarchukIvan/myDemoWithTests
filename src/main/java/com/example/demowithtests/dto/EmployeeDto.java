@@ -33,8 +33,8 @@ public class EmployeeDto {
     public String phone;
 
     public Set<AddressDto> addresses = new HashSet<>();
-    @NotNull(message = "Photos may not be null")
-    public List<PhotoDto> photos;
+//    @NotNull(message = "Photos may not be null")
+//    public List<PhotoDto> photos;
     public Gender gender;
     public Boolean isPrivate = Boolean.FALSE;
     @Password

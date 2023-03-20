@@ -212,13 +212,6 @@ public class EmployeeServiceBean implements EmployeeService {
             emailService.sendTestMail(e.getEmail(), "{Company name} to " + e.getName(), "Reminder! \nYour photo is about to expire, you have to renew it!");
             List<Photo> photos = e.getPhotos();
             photos.get(photos.size() - 1).setIsPrivate(Boolean.TRUE);
-            e.getPhotos().add(Photo.builder()
-                            .photoUrl("new url")
-                            .cameraType("new camera type")
-                            .description("new description")
-                            .uploadDate(LocalDate.now())
-                            .isPrivate(Boolean.FALSE)
-                            .build());
         }
         return employeeRepository.saveAll(listExEmployees);
     }
@@ -250,9 +243,6 @@ public class EmployeeServiceBean implements EmployeeService {
                 .password("123321")
                 .photos(List.of(Photo.builder()
                         .uploadDate(LocalDate.now())
-                        .photoUrl("dropBox.com")
-                        .cameraType("android META-INF")
-                        .description("some description")
                         .build()
                 ))
                 .build();

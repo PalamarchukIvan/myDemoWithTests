@@ -1,9 +1,12 @@
 package com.example.demowithtests.web;
 
+import com.example.demowithtests.domain.Employee;
+import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.dto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeForPatchDto;
 import com.example.demowithtests.dto.EmployeeReadDto;
 import com.example.demowithtests.service.EmployeeService;
+import com.example.demowithtests.service.PhotoServiceBean;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
 import com.example.demowithtests.util.exception.ResourceIsPrivateException;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,8 +19,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +33,25 @@ import java.util.Optional;
 @Tag(name = "Employee", description = "Employee API")
 public class EmployeeControllerBean implements EmployeeControllerSwagger {
     private final EmployeeService employeeService;
+    private final PhotoServiceBean photoService;
 
     //Операция сохранения юзера в базу данных
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
-    public EmployeeReadDto saveEmployee( @RequestBody @Valid EmployeeDto requestForSave) {
+    public EmployeeReadDto saveEmployee(@RequestBody @Valid EmployeeDto requestForSave) {
         var employee = EmployeeMapper.INSTANCE.employeeDtoToEmployee(requestForSave);
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
+    }
+    @PostMapping("/users/addPhoto/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<Photo> addPhotoToEmployee(@RequestParam MultipartFile image,@PathVariable Integer id) {
+        Employee employee =  employeeService.getById(id);
+        try {
+            photoService.addPhoto(image, employeeService.getById(id));
+        } catch (IOException e) {
+            System.err.println("error creating photo " + e);
+        }
+        return employee.getPhotos();
     }
 
     //Получение списка юзеров
@@ -43,12 +60,13 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     public List<EmployeeReadDto> getAllUsers() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.filterPrivateEmployees(employeeService.getAll()));
     }
+
     @GetMapping("/users/p")
     @ResponseStatus(HttpStatus.OK)
     public Page<EmployeeReadDto> getPage(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "5") int size) {
         Pageable paging = PageRequest.of(page, size);
-        return  EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.getAllWithPagination(paging));
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.getAllWithPagination(paging));
     }
 
     //Получения юзера по id
@@ -56,7 +74,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto getEmployeeById(@PathVariable Integer id) {
         var employee = employeeService.getById(id);
-        if(employee.getIsPrivate()) throw new ResourceIsPrivateException();
+        if (employee.getIsPrivate()) throw new ResourceIsPrivateException();
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employee);
     }
 
@@ -92,10 +110,10 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @GetMapping("/users/country")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> findByCountry(@RequestParam(required = false) String country,
-                                        @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "3") int size,
-                                        @RequestParam(defaultValue = "") List<String> sortList,
-                                        @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder) {
+                                               @RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "3") int size,
+                                               @RequestParam(defaultValue = "") List<String> sortList,
+                                               @RequestParam(defaultValue = "DESC") Sort.Direction sortOrder) {
 
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.findByCountryContaining(country, page, size, sortList, sortOrder.toString()).toList());
@@ -128,7 +146,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
 
     @GetMapping("/users/char")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeReadDto> getAllUsersByNamePartly(@RequestParam String letters){
+    public List<EmployeeReadDto> getAllUsersByNamePartly(@RequestParam String letters) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.filterPrivateEmployees(employeeService.findEmployeeByPartOfTheName(letters)));
     }

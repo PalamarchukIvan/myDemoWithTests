@@ -16,48 +16,18 @@ import java.util.Set;
 @Mapper
 public interface EmployeeMapper {
     EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
-    default List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employeeList) {
-        if ( employeeList == null ) {
-            return null;
-        }
+    List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employeeList);
+    EmployeeReadDto employeeToEmployeeReadDto(Employee employee) ;
 
-        List<EmployeeReadDto> list = new ArrayList<EmployeeReadDto>( employeeList.size() );
-        for ( Employee employee : employeeList ) {
-            list.add( employeeToEmployeeReadDto( employee ) );
-        }
-
-        return list;
-    }
-    default EmployeeReadDto employeeToEmployeeReadDto(Employee employee) {
-        if ( employee == null ) {
-            return null;
-        }
-
-        EmployeeReadDto employeeReadDto = new EmployeeReadDto();
-
-        employeeReadDto.name = employee.getName();
-        employeeReadDto.country = employee.getCountry();
-        employeeReadDto.email = employee.getEmail();
-        employeeReadDto.phone = employee.getPhone();
-        employeeReadDto.addresses = addressToAddressDto( employee.getAddresses() );
-        if(employee.getPhotos().size() > 0)
-            employeeReadDto.photos =  photoToPhotoDto (employee.getPhotos().get(employee.getPhotos().size() - 1));
-        employeeReadDto.gender = employee.getGender();
-
-        return employeeReadDto;
-    }
-
-    default PhotoDto photoToPhotoDto(Photo photo) {
-        if ( photo == null ) {
+    default PhotoDto photoToPhotoDto(List<Photo> photos) {
+        if ( photos == null || photos.size() == 0) {
             return null;
         }
 
         PhotoDto photoDto = new PhotoDto();
+        Photo photo = photos.get(photos.size() - 1);
 
         photoDto.uploadDate = photo.getUploadDate();
-        photoDto.description = photo.getDescription();
-        photoDto.cameraType = photo.getCameraType();
-        photoDto.photoUrl = photo.getPhotoUrl();
 
         return photoDto;
     }
