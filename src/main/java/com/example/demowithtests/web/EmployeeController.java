@@ -5,6 +5,7 @@ import com.example.demowithtests.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -45,4 +46,7 @@ public interface EmployeeController {
     List<EmployeeReadDto> getAllWithExpiredPhotos();
 
     List<EmployeeReadDto> notifyAllWithExpiredPhotos();
+    void removePhoto(@PathVariable Integer id);
+
+    byte[] getPhoto(@PathVariable Integer id);
 }

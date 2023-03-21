@@ -154,7 +154,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @GetMapping(value = "/users/photo/{id}",
             produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public byte[] getPhoto(@PathVariable Integer id) throws IOException {
+    public byte[] getPhoto(@PathVariable Integer id) {
         return photoService.findPhoto(id);
     }
 
