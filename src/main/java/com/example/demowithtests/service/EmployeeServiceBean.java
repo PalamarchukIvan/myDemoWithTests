@@ -152,40 +152,6 @@ public class EmployeeServiceBean implements EmployeeService {
         }
         return sorts;
     }
-
-    @Override
-    public List<String> getAllEmployeeCountry() {
-        List<Employee> employeeList = employeeRepository.findAll();
-        return employeeList.stream()
-                .map(Employee::getCountry)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<String> getSortCountry() {
-        List<Employee> employeeList = employeeRepository.findAll();
-        return employeeList.stream()
-                .map(Employee::getCountry)
-                .filter(c -> c.startsWith("U"))
-                .sorted(Comparator.naturalOrder())
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<String> findEmails() {
-        var employeeList = employeeRepository.findAll();
-
-        var emails = employeeList.stream()
-                .map(Employee::getEmail)
-                .collect(Collectors.toList());
-
-        var opt = emails.stream()
-                .filter(s -> s.endsWith(".com"))
-                .findFirst()
-                .orElse("error?");
-        return Optional.of(opt);
-    }
-
     @Override
     public List<Employee> findEmployeeIfAddressPresent() {
         return employeeRepository.findEmployeeByPresentAddress();

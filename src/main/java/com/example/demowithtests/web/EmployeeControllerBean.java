@@ -1,8 +1,10 @@
 package com.example.demowithtests.web;
 
 import com.example.demowithtests.domain.Employee;
-import com.example.demowithtests.domain.Photo;
-import com.example.demowithtests.dto.*;
+import com.example.demowithtests.dto.EmployeeDto;
+import com.example.demowithtests.dto.EmployeeForPatchDto;
+import com.example.demowithtests.dto.EmployeeReadDto;
+import com.example.demowithtests.dto.PhotoDto;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.PhotoServiceBean;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
@@ -16,12 +18,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -41,9 +45,10 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
     }
 
-    @PostMapping("/users/addPhoto/{id}")
+    @PostMapping(value = "/users/addPhoto/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    public EmployeeReadDto addPhotoToEmployee(@RequestParam MultipartFile image, @PathVariable Integer id) throws IOException {
+    public EmployeeReadDto addPhotoToEmployee(@RequestParam MultipartFile image, @PathVariable Integer id) throws IOException, HttpMediaTypeNotSupportedException {
+        if(!Objects.equals(image.getContentType(), "image/png")) throw new HttpMediaTypeNotSupportedException("photo must be .png / .jpeg");
         Employee employee = employeeService.getById(id);
         photoService.addPhoto(image, employeeService.getById(id));
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employee);
@@ -52,7 +57,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @GetMapping("/users/getPhotos/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public List<PhotoDto> getAllPhotoFromEmployee(@PathVariable Integer id) {
-        EmployeeDto employee = EmployeeMapper.INSTANCE.employeeToEmployeeDto(employeeService.getById(id)) ;
+        EmployeeDto employee = EmployeeMapper.INSTANCE.employeeToEmployeeDto(employeeService.getById(id));
         return employee.photos;
     }
 
@@ -120,25 +125,6 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.findByCountryContaining(country, page, size, sortList, sortOrder.toString()).toList());
     }
-
-    @GetMapping("/users/c")
-    @ResponseStatus(HttpStatus.OK)
-    public List<String> getAllUsersC() {
-        return employeeService.getAllEmployeeCountry();
-    }
-
-    @GetMapping("/users/s")
-    @ResponseStatus(HttpStatus.OK)
-    public List<String> getAllUsersSort() {
-        return employeeService.getSortCountry();
-    }
-
-    @GetMapping("/users/emails")
-    @ResponseStatus(HttpStatus.OK)
-    public Optional<String> getAllUsersSo() {
-        return employeeService.findEmails();
-    }
-
     @GetMapping("/users/addresses")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsersWithAddresses() {
@@ -171,6 +157,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     public byte[] getPhoto(@PathVariable Integer id) throws IOException {
         return photoService.findPhoto(id);
     }
+
 //    @GetMapping("/test")
 //    public String test(){
 //        return "<!DOCTYPE html>\n"+
@@ -186,5 +173,11 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> notifyAllWithExpiredPhotos() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.updateEmployeesWithExpiredPhotos());
+    }
+
+    @DeleteMapping("/users/photo/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void removePhoto(@PathVariable Integer id) {
+        photoService.deletePhoto(id);
     }
 }

@@ -4,6 +4,7 @@ import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public interface EmployeeController {
 
     EmployeeReadDto saveEmployee(EmployeeDto requestForSave);
 
-    EmployeeReadDto addPhotoToEmployee(MultipartFile image, Integer id) throws IOException;
+    EmployeeReadDto addPhotoToEmployee(MultipartFile image, Integer id) throws IOException, HttpMediaTypeNotSupportedException;
 
     List<PhotoDto> getAllPhotoFromEmployee(Integer id);
 
@@ -34,12 +35,6 @@ public interface EmployeeController {
     void removeAllUsers();
 
     List<EmployeeReadDto> findByCountry(String country, int page, int size, List<String> sortList, Sort.Direction sortOrder);
-
-    List<String> getAllUsersC();
-
-    List<String> getAllUsersSort();
-
-    Optional<String> getAllUsersSo();
 
     List<EmployeeReadDto> getAllUsersWithAddresses();
 
