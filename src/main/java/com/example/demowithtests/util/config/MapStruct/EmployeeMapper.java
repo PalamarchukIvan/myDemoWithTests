@@ -7,9 +7,7 @@ import com.example.demowithtests.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -19,15 +17,16 @@ public interface EmployeeMapper {
     List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employeeList);
     EmployeeReadDto employeeToEmployeeReadDto(Employee employee) ;
 
-    default PhotoDto photoToPhotoDto(List<Photo> photos) {
+    default PhotoReadDto photoToPhotoDto(List<Photo> photos) {
         if ( photos == null || photos.size() == 0) {
             return null;
         }
 
-        PhotoDto photoDto = new PhotoDto();
+        PhotoReadDto photoDto = new PhotoReadDto();
         Photo photo = photos.get(photos.size() - 1);
 
         photoDto.uploadDate = photo.getUploadDate();
+        photoDto.url = photo.getUrl();
 
         return photoDto;
     }
@@ -40,5 +39,5 @@ public interface EmployeeMapper {
     Employee employeeForPatchDtoToEmployee(EmployeeForPatchDto employee);
     Set<AddressDto> addressToAddressDto(Set<Address> address);
     Address addressDtoToAddress(AddressDto address);
-    Photo photoDtoTpPhoto(PhotoDto photo);
+    Photo photoDtoTpPhoto(PhotoReadDto photo);
 }
