@@ -48,7 +48,8 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @PostMapping(value = "/users/addPhoto/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeReadDto addPhotoToEmployee(@RequestParam MultipartFile image, @PathVariable Integer id) throws IOException, HttpMediaTypeNotSupportedException {
-        if(!Objects.equals(image.getContentType(), "image/png")) throw new HttpMediaTypeNotSupportedException("photo must be .png / .jpeg");
+        if (!Objects.equals(image.getContentType(), "image/png") || !Objects.equals(image.getContentType(), "image/jpeg"))
+            throw new HttpMediaTypeNotSupportedException("photo must be .png / .jpeg");
         Employee employee = employeeService.getById(id);
         photoService.addPhoto(image, employeeService.getById(id));
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employee);
@@ -125,6 +126,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.findByCountryContaining(country, page, size, sortList, sortOrder.toString()).toList());
     }
+
     @GetMapping("/users/addresses")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsersWithAddresses() {

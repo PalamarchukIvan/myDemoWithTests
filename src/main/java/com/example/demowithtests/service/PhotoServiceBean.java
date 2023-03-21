@@ -5,6 +5,7 @@ import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.repository.PhotoRepository;
 import com.example.demowithtests.util.FileUploadManager;
+import com.example.demowithtests.util.exception.ResourceIsPrivateException;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class PhotoServiceBean implements PhotoService {
         String path = "employee-photos/employee-" + employee.getId();
         Integer lastPhotoId = photoRepository.findLastPhotoId();
         employee.getPhotos().add(Photo.builder()
-                .name(fileName.split("\\.")[0])
+                .name(employee.getName() + " " + lastPhotoId)
                 .path(path)
                 .format(fileName.split("\\.")[1])
                 .isPrivate(Boolean.FALSE)
@@ -49,6 +50,7 @@ public class PhotoServiceBean implements PhotoService {
     @Override
     public byte[] findPhoto(Integer photo_id) {
         Photo result = photoRepository.findById(photo_id).orElseThrow(ResourceNotFoundException::new);
+        if(result.getIsPrivate()) throw new ResourceIsPrivateException();
         return result.getBytes();
     }
 }
