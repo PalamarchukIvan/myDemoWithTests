@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,9 @@ public interface EmployeeControllerSwagger extends EmployeeController{
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified employee request not found."),
             @ApiResponse(responseCode = "409", description = "Employee already exists")})
     EmployeeReadDto saveEmployee(EmployeeDto requestForSave);
+
+    @Override
+    EmployeeReadDto addPhotoToEmployee(MultipartFile image, Integer id) throws IOException;
 
     @Override
     List<EmployeeReadDto> getAllUsers();

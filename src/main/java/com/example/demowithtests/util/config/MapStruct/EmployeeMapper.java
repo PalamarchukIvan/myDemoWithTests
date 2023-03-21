@@ -17,7 +17,7 @@ public interface EmployeeMapper {
     List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employeeList);
     EmployeeReadDto employeeToEmployeeReadDto(Employee employee) ;
 
-    default PhotoReadDto photoToPhotoDto(List<Photo> photos) {
+    default PhotoReadDto photoToPhotoReadDto(List<Photo> photos) {
         if ( photos == null || photos.size() == 0) {
             return null;
         }
@@ -34,6 +34,8 @@ public interface EmployeeMapper {
     default Page<EmployeeReadDto> employeeToEmployeeReadDto(Page<Employee> employeePage){
         return employeePage.map(INSTANCE::employeeToEmployeeReadDto);
     }
+
+    EmployeeDto employeeToEmployeeDto(Employee employee);
 
     Employee employeeDtoToEmployee(EmployeeDto employeeDto);
     Employee employeeForPatchDtoToEmployee(EmployeeForPatchDto employee);

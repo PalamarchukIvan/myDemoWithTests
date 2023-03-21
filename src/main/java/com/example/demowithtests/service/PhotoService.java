@@ -9,4 +9,5 @@ import java.io.IOException;
 
 public interface PhotoService {
     void addPhoto(MultipartFile file, Employee employee) throws IOException;
+    byte[] findPhoto(Integer photo_id);
 }

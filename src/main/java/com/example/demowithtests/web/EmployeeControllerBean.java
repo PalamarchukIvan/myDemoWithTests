@@ -2,9 +2,7 @@ package com.example.demowithtests.web;
 
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Photo;
-import com.example.demowithtests.dto.EmployeeDto;
-import com.example.demowithtests.dto.EmployeeForPatchDto;
-import com.example.demowithtests.dto.EmployeeReadDto;
+import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.PhotoServiceBean;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
@@ -42,16 +40,20 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
         var employee = EmployeeMapper.INSTANCE.employeeDtoToEmployee(requestForSave);
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
     }
+
     @PostMapping("/users/addPhoto/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<Photo> addPhotoToEmployee(@RequestParam MultipartFile image,@PathVariable Integer id) {
-        Employee employee =  employeeService.getById(id);
-        try {
-            photoService.addPhoto(image, employeeService.getById(id));
-        } catch (IOException e) {
-            System.err.println("error creating photo " + e);
-        }
-        return employee.getPhotos();
+    public EmployeeReadDto addPhotoToEmployee(@RequestParam MultipartFile image, @PathVariable Integer id) throws IOException {
+        Employee employee = employeeService.getById(id);
+        photoService.addPhoto(image, employeeService.getById(id));
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employee);
+    }
+
+    @GetMapping("/users/getPhotos/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<PhotoDto> getAllPhotoFromEmployee(@PathVariable Integer id) {
+        EmployeeDto employee = EmployeeMapper.INSTANCE.employeeToEmployeeDto(employeeService.getById(id)) ;
+        return employee.photos;
     }
 
     //Получение списка юзеров
@@ -162,6 +164,23 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     public List<EmployeeReadDto> getAllWithExpiredPhotos() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.findEmployeesWithExpiredPhotos());
     }
+
+    @GetMapping(value = "/users/photo/{id}",
+            produces = MediaType.IMAGE_PNG_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public byte[] getPhoto(@PathVariable Integer id) throws IOException {
+        return photoService.findPhoto(id);
+    }
+//    @GetMapping("/test")
+//    public String test(){
+//        return "<!DOCTYPE html>\n"+
+//                "<html>\n" +
+//                "<head></head>\n"+
+//                "<body>\n" +
+//                "\t<img src = \"C:\\Users\\Иван\\Desktop\\Hillel\\myDemoWithTests\\employee-photos\\employee-1\\employee-1 7.png\">\n" +
+//                "</body>\n" +
+//                "</html>\n";
+//    }
 
     @GetMapping("/users/notify_photos")
     @ResponseStatus(HttpStatus.OK)

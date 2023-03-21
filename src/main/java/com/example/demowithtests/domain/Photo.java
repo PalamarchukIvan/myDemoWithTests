@@ -26,6 +26,7 @@ public class Photo {
     private String name;
     private String format;
     private String url;
+    private byte[] bytes;
     @Column(columnDefinition = "BOOLEAN DEFAULT 'false'")
     private Boolean isPrivate = Boolean.FALSE;
 }
