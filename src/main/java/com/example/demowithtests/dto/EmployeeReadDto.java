@@ -21,7 +21,7 @@ public class EmployeeReadDto {
     public String email;
     public String phone;
     public Set<AddressDto> addresses = new HashSet<>();
-    public PhotoReadDto photos;
+    public List<PhotoReadDto> photos;
     public Date date = Date.from(Instant.now());
     public Gender gender;
 }

@@ -4,6 +4,7 @@ import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.util.anotations.validation.Password;
 import com.example.demowithtests.util.anotations.validation.Phone;
 import com.example.demowithtests.domain.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.ToString;
 
@@ -33,7 +34,7 @@ public class EmployeeDto {
     public String phone;
 
     public Set<AddressDto> addresses = new HashSet<>();
-    //@NotNull(message = "Photos may not be null")
+    @JsonIgnore
     public List<PhotoDto> photos;
     public Gender gender;
     public Boolean isPrivate = Boolean.FALSE;

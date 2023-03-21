@@ -14,32 +14,34 @@ import java.util.Set;
 @Mapper
 public interface EmployeeMapper {
     EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);
-    List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employeeList);
-    EmployeeReadDto employeeToEmployeeReadDto(Employee employee) ;
 
-    default PhotoReadDto photoToPhotoReadDto(List<Photo> photos) {
-        if ( photos == null || photos.size() == 0) {
-            return null;
-        }
+    List<EmployeeReadDto> employeeToEmployeeReadDto(List<Employee> employeeList);
+
+    EmployeeReadDto employeeToEmployeeReadDto(Employee employee);
+
+    default PhotoReadDto photoToPhotoReadDto(Photo photo) {
+        if (photo == null || photo.getIsPrivate()) return null;
 
         PhotoReadDto photoDto = new PhotoReadDto();
-        Photo photo = photos.get(photos.size() - 1);
-
         photoDto.uploadDate = photo.getUploadDate();
         photoDto.url = photo.getUrl();
 
         return photoDto;
     }
 
-    default Page<EmployeeReadDto> employeeToEmployeeReadDto(Page<Employee> employeePage){
+    default Page<EmployeeReadDto> employeeToEmployeeReadDto(Page<Employee> employeePage) {
         return employeePage.map(INSTANCE::employeeToEmployeeReadDto);
     }
 
     EmployeeDto employeeToEmployeeDto(Employee employee);
 
     Employee employeeDtoToEmployee(EmployeeDto employeeDto);
+
     Employee employeeForPatchDtoToEmployee(EmployeeForPatchDto employee);
+
     Set<AddressDto> addressToAddressDto(Set<Address> address);
+
     Address addressDtoToAddress(AddressDto address);
+
     Photo photoDtoTpPhoto(PhotoReadDto photo);
 }

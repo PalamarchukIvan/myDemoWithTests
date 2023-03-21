@@ -40,6 +40,12 @@ public class PhotoServiceBean implements PhotoService {
         FileUploadManager.saveFile(newFileName, "employee-photos/employee-" + employee.getId(), file);
     }
 
+    public void deletePhoto(Integer id) {
+        Photo photo = photoRepository.findById(id).orElseThrow(ResourceNotFoundException::new) ;
+        photo.setIsPrivate(Boolean.TRUE);
+        photoRepository.save(photo);
+    }
+
     @Override
     public byte[] findPhoto(Integer photo_id) {
         Photo result = photoRepository.findById(photo_id).orElseThrow(ResourceNotFoundException::new);
