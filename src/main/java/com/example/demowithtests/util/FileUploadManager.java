@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 public class FileUploadManager {
     public static void saveFile(String name, String path, MultipartFile file) throws IOException {
         Path uploadPath = Paths.get(path);
-        if(!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
+        if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
 
         Path filePath = uploadPath.resolve(name);
         Files.copy(file.getInputStream(), filePath);

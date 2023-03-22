@@ -75,7 +75,7 @@ public class EmployeeServiceBean implements EmployeeService {
     public List<Employee> findEmployeesWithExpiredPhotos() {
         return getAll().stream().filter(employee -> employee.getPhotos()
                         .stream()
-                        .anyMatch(photo -> photo.getUploadDate().isBefore(LocalDate.now().minusYears(5)) && !photo.getIsPrivate()))
+                        .anyMatch(photo -> photo.getUploadDate().isBefore(LocalDate.now().minusYears(5).plusDays(5)) && !photo.getIsPrivate()))
                 .collect(Collectors.toList());
     }
 
@@ -176,8 +176,11 @@ public class EmployeeServiceBean implements EmployeeService {
         List<Employee> listExEmployees = findEmployeesWithExpiredPhotos();
         for (Employee e : listExEmployees) {
             emailService.sendTestMail(e.getEmail(), "{Company name} to " + e.getName(), "Reminder! \nYour photo is about to expire, you have to renew it!");
-            List<Photo> photos = e.getPhotos();
-            photos.get(photos.size() - 1).setIsPrivate(Boolean.TRUE);
+            e.setPhotos(e.getPhotos()
+                    .stream()
+                    .filter(photo -> photo.getUploadDate().isBefore(LocalDate.now().minusYears(5).plusDays(5)) && !photo.getIsPrivate())
+                    .peek(photo -> photo.setIsPrivate(Boolean.TRUE))
+                    .collect(Collectors.toList()));
         }
         return employeeRepository.saveAll(listExEmployees);
     }
