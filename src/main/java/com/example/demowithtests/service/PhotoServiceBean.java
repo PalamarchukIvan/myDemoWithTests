@@ -4,7 +4,6 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.repository.PhotoRepository;
-import com.example.demowithtests.util.FileUploadManager;
 import com.example.demowithtests.util.exception.ResourceIsPrivateException;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
@@ -25,11 +24,9 @@ public class PhotoServiceBean implements PhotoService {
     @Override
     public void addPhoto(MultipartFile file, Employee employee) throws IOException {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        String path = "employee-photos/employee-" + employee.getId();
         Integer lastPhotoId = photoRepository.findLastPhotoId();
         employee.getPhotos().add(Photo.builder()
                 .name(employee.getName() + " " + lastPhotoId)
-                .path(path)
                 .format(fileName.split("\\.")[1])
                 .isPrivate(Boolean.FALSE)
                 .uploadDate(LocalDate.now())
@@ -37,8 +34,6 @@ public class PhotoServiceBean implements PhotoService {
                 .bytes(file.getBytes())
                 .build());
         employeeRepository.save(employee);
-        String newFileName = "employee-" + employee.getId() + " " + employee.getPhotos().size() + "." + fileName.split("\\.")[1];
-        FileUploadManager.saveFile(newFileName, "employee-photos/employee-" + employee.getId(), file);
     }
 
     public void deletePhoto(Integer id) {

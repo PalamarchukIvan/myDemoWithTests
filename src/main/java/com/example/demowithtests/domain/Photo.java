@@ -22,7 +22,6 @@ public class Photo {
     private Integer id;
     @EqualsAndHashCode.Exclude
     private LocalDate uploadDate = LocalDate.now();
-    private String path;
     private String name;
     private String format;
     private String url;

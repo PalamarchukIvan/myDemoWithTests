@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Builder
 public class PhotoDto {
     public LocalDate uploadDate = LocalDate.now();
-    public String path;
     public String name;
     public String format;
     public String url;
