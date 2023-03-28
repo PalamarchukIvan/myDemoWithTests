@@ -22,6 +22,7 @@ public class EmployeeReadDto {
     public String phone;
     public Set<AddressDto> addresses = new HashSet<>();
     public List<PhotoReadDto> photos;
+    public BadgeResponseDto badge;
     public Date date = Date.from(Instant.now());
     public Gender gender;
 }
