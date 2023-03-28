@@ -34,6 +34,11 @@ public interface EmployeeControllerSwagger extends EmployeeController{
     EmployeeReadDto addPhotoToEmployee(MultipartFile image, Integer id) throws IOException, HttpMediaTypeNotSupportedException;
 
     @Override
+    @Operation(summary = "This is endpoint adds badge to Employee.", description = "Adds badge to employee.", tags = {"Employee", "Badge"})
+    @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK."))
+    EmployeeReadDto updateBadge(Integer idEmployee, Integer idBadge);
+
+    @Override
     @Operation(summary = "This is endpoint gets all employees.", description = "Shows all employees in DB", tags = {"Employee"})
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK."))
     List<EmployeeReadDto> getAllUsers();

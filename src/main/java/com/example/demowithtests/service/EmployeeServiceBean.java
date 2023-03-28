@@ -1,9 +1,6 @@
 package com.example.demowithtests.service;
 
-import com.example.demowithtests.domain.Address;
-import com.example.demowithtests.domain.Employee;
-import com.example.demowithtests.domain.Gender;
-import com.example.demowithtests.domain.Photo;
+import com.example.demowithtests.domain.*;
 import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.util.anotations.formatingAnnotations.InitMyAnnotations;
 import com.example.demowithtests.util.anotations.formatingAnnotations.Name;
@@ -30,6 +27,7 @@ import java.util.stream.Collectors;
 public class EmployeeServiceBean implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmailService emailService;
+    private final BadgeService badgeService;
 
     @Override
     @InitMyAnnotations
@@ -184,6 +182,14 @@ public class EmployeeServiceBean implements EmployeeService {
                     .collect(Collectors.toList()));
         }
         return employeeRepository.saveAll(listExEmployees);
+    }
+
+    @Override
+    public Employee addBadge(Integer idEmployee, Integer idBadge) {
+        Badge badge = badgeService.getById(idBadge);
+        Employee employee = employeeRepository.findById(idEmployee).orElseThrow(ResourceNotFoundException::new);
+        employee.setBadge(badge);
+        return employeeRepository.save(employee);
     }
 
     @Override

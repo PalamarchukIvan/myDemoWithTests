@@ -20,6 +20,7 @@ public class EmployeeForPatchDto {
     public String phone;
     public Set<AddressDto> addresses;
     public Gender gender;
+    public BadgeRequestDto badge;
     public Boolean isPrivate;
     @Password
     public String password;

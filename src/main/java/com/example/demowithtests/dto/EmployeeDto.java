@@ -1,5 +1,6 @@
 package com.example.demowithtests.dto;
 
+import com.example.demowithtests.domain.Badge;
 import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.util.anotations.validation.Password;
 import com.example.demowithtests.util.anotations.validation.Phone;
@@ -37,6 +38,7 @@ public class EmployeeDto {
     @JsonIgnore
     public List<PhotoDto> photos;
     public Gender gender;
+    public BadgeRequestDto badge;
     public Boolean isPrivate = Boolean.FALSE;
     @Password
     public String password;

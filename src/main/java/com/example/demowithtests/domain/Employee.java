@@ -41,4 +41,7 @@ public class Employee {
     @Column(columnDefinition = "BOOLEAN DEFAULT 'false'")//устанавливает дэфолтное значение false
     private Boolean isPrivate = Boolean.FALSE;
     private String password;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passport_id", referencedColumnName = "id")
+    private Badge badge;
 }

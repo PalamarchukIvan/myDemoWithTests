@@ -22,6 +22,7 @@ public interface EmployeeController {
 
     //Получение списка юзеров
     List<EmployeeReadDto> getAllUsers();
+    EmployeeReadDto updateBadge(Integer idEmployee, Integer idBadge);
 
     Page<EmployeeReadDto> getPage(int page, int size);
 

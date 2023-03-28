@@ -62,12 +62,16 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
         EmployeeDto employee = EmployeeMapper.INSTANCE.employeeToEmployeeDto(employeeService.getById(id));
         return employee.photos;
     }
-
     //Получение списка юзеров
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsers() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.filterPrivateEmployees(employeeService.getAll()));
+    }
+    @PatchMapping("/users/{idEmployee}/badge/{idBadge}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeReadDto updateBadge(@PathVariable Integer idEmployee, @PathVariable Integer idBadge) {
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.addBadge(idEmployee, idBadge));
     }
 
     @GetMapping("/users/p")
