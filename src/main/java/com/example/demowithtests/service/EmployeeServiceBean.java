@@ -67,6 +67,7 @@ public class EmployeeServiceBean implements EmployeeService {
         entity.setPhone(employee.getPhone());
         entity.setPassword(employee.getPassword());
         entity.setPhotos(employee.getPhotos());
+        entity.setBadge(employee.getBadge());
         return employeeRepository.save(entity);
     }
 
@@ -110,9 +111,10 @@ public class EmployeeServiceBean implements EmployeeService {
                     if (employee.getPhone() != null && !entity.getPhone().equals(employee.getPhone()))
                         entity.setPhone(employee.getPhone());
 
-                    if (employee.getPhotos() != null && !entity.getPhotos().equals(employee.getPhotos())) {
+                    if (employee.getPhotos() != null && !entity.getPhotos().equals(employee.getPhotos()))
                         entity.setPhotos(employee.getPhotos());
-                    }
+                    if(employee.getBadge() != null && !entity.getBadge().equals(employee.getBadge()))
+                        entity.setBadge(employee.getBadge());
                     return employeeRepository.save(entity);
                 })
                 .orElseThrow(ResourceNotFoundException::new);
