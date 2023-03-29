@@ -190,8 +190,17 @@ public class EmployeeServiceBean implements EmployeeService {
     public Employee addBadge(Integer idEmployee, Integer idBadge) {
         Badge badge = badgeService.getById(idBadge);
         Employee employee = employeeRepository.findById(idEmployee).orElseThrow(ResourceNotFoundException::new);
+        if(badge.getEmployee() != null) {
+            Employee formerEmployee = badge.getEmployee();
+            formerEmployee.setBadge(null);
+            employeeRepository.save(formerEmployee);
+            badge.setEmployee(null);
+        }
         employee.setBadge(badge);
-        return employeeRepository.save(employee);
+        badge.setEmployee(employee);
+        employeeRepository.save(employee);
+        badgeService.updateBadgeToEmployee(badge);
+        return employee;
     }
 
     @Override

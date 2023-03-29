@@ -52,4 +52,13 @@ public class BadgeServiceBean implements BadgeService {
                     return badgeRepository.save(badge);
                 }).orElseThrow(ResourceNotFoundException::new);
     }
+
+    @Override
+    public Badge updateBadgeToEmployee(Badge badge) {
+        if(badge.getEmployee() == null) return badge;
+        System.err.println("  ");
+        badge.setFirstName(badge.getEmployee().getName().split(" ")[0]);
+        badge.setLastName(badge.getEmployee().getName().split(" ")[1]);
+        return badgeRepository.save(badge);
+    }
 }

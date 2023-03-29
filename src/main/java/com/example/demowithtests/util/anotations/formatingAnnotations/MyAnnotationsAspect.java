@@ -10,14 +10,17 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Aspect
 @Component
 public class MyAnnotationsAspect {
     @Pointcut(value = "@annotation(InitMyAnnotations)")
-    public void settingNamePointCut() {}
+    public void settingNamePointCut() {
+    }
 
     @Around(value = "settingNamePointCut()")
     public Object formatAnnotatedFields(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -32,17 +35,17 @@ public class MyAnnotationsAspect {
     }
 
     private void applyAnnotationsOnObject(Object input, List<Class<?>> workingAnnotations) throws IllegalAccessException {
-        if(input instanceof Collection){
+        if (input instanceof Collection) {
             Collection<?> args = (Collection<?>) input;
             for (Object arg : args) {
                 goThroughFields(arg, workingAnnotations);
             }
-        } else if(input instanceof Object[]){
+        } else if (input instanceof Object[]) {
             Object[] args = (Object[]) input;
             for (Object arg : args) {
                 goThroughFields(arg, workingAnnotations);
             }
-        } else{
+        } else {
             goThroughFields(input, workingAnnotations);
         }
     }
@@ -51,13 +54,12 @@ public class MyAnnotationsAspect {
         for (Field field : arg.getClass().getDeclaredFields()) {
             try {
                 field.setAccessible(true);
-                if(!(field.get(arg) instanceof Collection) && !field.getClass().isArray()){
+                if (!(field.get(arg) instanceof Collection) && !field.getClass().isArray()) {
                     applyAnnotationsOnField(workingAnnotations, arg, field);
-                }
-                else{
+                } else {
                     applyAnnotationsOnObject(field.get(arg), workingAnnotations);
                 }
-            } catch (InaccessibleObjectException e){
+            } catch (InaccessibleObjectException e) {
                 break;
             }
 
@@ -74,14 +76,22 @@ public class MyAnnotationsAspect {
     }
 
     private String toName(String name) {
-        char[] chars = name.toLowerCase().toCharArray();
-        name = name.toUpperCase();
-        chars[0] = name.charAt(0);
-        return String.valueOf(chars);
+        String[] names = name.split(" ");
+        for (int i = 0; i < names.length; i++) {
+            char[] chars = names[i].toLowerCase().toCharArray();
+            names[i] = names[i].toUpperCase();
+            chars[0] = names[i].charAt(0);
+            names[i] = String.valueOf(chars);
+        }
+        return Arrays.stream(names).flatMap(s -> Stream.of(s, " ")).reduce("", String::concat);
+//        char[] chars = name.toLowerCase().toCharArray();
+//        name = name.toUpperCase();
+//        chars[0] = name.charAt(0);
+//        return String.valueOf(chars);
     }
 
     private String toShortenCountry(String country) {
-        if(!country.contains(" ")) return country.toUpperCase().substring(0, 2);
+        if (!country.contains(" ")) return country.toUpperCase().substring(0, 2);
 
         else {
             StringBuilder result = new StringBuilder();

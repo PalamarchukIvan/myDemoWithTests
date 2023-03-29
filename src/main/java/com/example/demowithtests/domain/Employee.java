@@ -42,6 +42,6 @@ public class Employee {
     private Boolean isPrivate = Boolean.FALSE;
     private String password;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "passport_id", referencedColumnName = "id")
+    @JoinColumn(name = "badge_id", referencedColumnName = "id")
     private Badge badge;
 }
