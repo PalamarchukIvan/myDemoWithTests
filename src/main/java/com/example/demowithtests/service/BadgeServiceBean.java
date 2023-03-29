@@ -1,20 +1,22 @@
 package com.example.demowithtests.service;
 
 import com.example.demowithtests.domain.Badge;
+import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.repository.BadgeRepository;
+import com.example.demowithtests.repository.EmployeeRepository;
 import com.example.demowithtests.util.exception.ResourceIsPrivateException;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class BadgeServiceBean implements BadgeService {
     private final BadgeRepository badgeRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Override
     public Badge getById(Integer id) {
@@ -37,6 +39,12 @@ public class BadgeServiceBean implements BadgeService {
     public void deleteBudge(Integer id) {
         Badge badge = badgeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         badge.setIsPrivate(Boolean.TRUE);
+        if(badge.getEmployee() != null) {
+            Employee formerEmployee = badge.getEmployee();
+            formerEmployee.setBadge(null);
+            badge.setEmployee(null);
+            employeeRepository.save(formerEmployee);
+        }
         badgeRepository.save(badge);
     }
 
