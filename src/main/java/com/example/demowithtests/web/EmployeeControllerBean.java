@@ -1,13 +1,11 @@
 package com.example.demowithtests.web;
 
 import com.example.demowithtests.domain.Employee;
-import com.example.demowithtests.dto.EmployeeDto;
-import com.example.demowithtests.dto.EmployeeForPatchDto;
-import com.example.demowithtests.dto.EmployeeReadDto;
-import com.example.demowithtests.dto.PhotoDto;
+import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.PhotoServiceBean;
 import com.example.demowithtests.util.anotations.validation.Image;
+import com.example.demowithtests.util.config.MapStruct.BadgeMapper;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
 import com.example.demowithtests.util.exception.ResourceIsPrivateException;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -72,6 +70,12 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto updateBadge(@PathVariable Integer idEmployee, @PathVariable Integer idBadge) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.addBadge(idEmployee, idBadge));
+    }
+
+    @PatchMapping("/users/{idEmployee}/badge/")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeReadDto updateBadgeInstantly(@PathVariable Integer idEmployee, @RequestBody BadgeRequestDto badge) {
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.addBadge(idEmployee, BadgeMapper.INSTANCE.badgeRequestDtoToBadge(badge)));
     }
 
     @GetMapping("/users/p")

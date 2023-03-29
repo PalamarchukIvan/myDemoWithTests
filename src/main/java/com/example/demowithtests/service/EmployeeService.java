@@ -34,4 +34,5 @@ public interface EmployeeService {
     List<Employee> findEmployeesWithExpiredPhotos();
     List<Employee> updateEmployeesWithExpiredPhotos();
     Employee addBadge(Integer idEmployee, Integer idBadge);
+    Employee addBadge(Integer idEmployee, Badge Badge);
 }

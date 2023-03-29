@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
 import java.util.Arrays;
@@ -83,11 +82,7 @@ public class MyAnnotationsAspect {
             chars[0] = names[i].charAt(0);
             names[i] = String.valueOf(chars);
         }
-        return Arrays.stream(names).flatMap(s -> Stream.of(s, " ")).reduce("", String::concat);
-//        char[] chars = name.toLowerCase().toCharArray();
-//        name = name.toUpperCase();
-//        chars[0] = name.charAt(0);
-//        return String.valueOf(chars);
+        return Arrays.stream(names).map(s -> s.concat(" ")).reduce("", String::concat);
     }
 
     private String toShortenCountry(String country) {

@@ -204,6 +204,12 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
+    public Employee addBadge(Integer idEmployee, Badge badge) {
+        badgeService.create(badge);
+        return addBadge(idEmployee, badge.getId());
+    }
+
+    @Override
     public void generateTestDatabase(int numberOfEntities) {
         List<Employee> list = new LinkedList<>();
         for (int i = 0; i < numberOfEntities; i++) {

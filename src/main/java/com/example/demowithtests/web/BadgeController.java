@@ -39,8 +39,6 @@ public class BadgeController {
     @GetMapping("/badges")
     @ResponseStatus(HttpStatus.OK)
     public List<BadgeResponseDto> getAll() {
-        List<Badge> badges = badgeService.getAllBadges();
-        System.err.println(badges);
         return BadgeMapper.INSTANCE.badgeToBadgeResponseDto(badgeService.getAllBadges());
     }
     @DeleteMapping("/badges/{id}")
