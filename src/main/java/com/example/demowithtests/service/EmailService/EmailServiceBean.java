@@ -1,4 +1,4 @@
-package com.example.demowithtests.service;
+package com.example.demowithtests.service.EmailService;
 
 import lombok.AllArgsConstructor;
 import org.springframework.mail.MailException;

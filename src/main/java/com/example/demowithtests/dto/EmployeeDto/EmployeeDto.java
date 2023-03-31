@@ -1,7 +1,8 @@
-package com.example.demowithtests.dto;
+package com.example.demowithtests.dto.EmployeeDto;
 
-import com.example.demowithtests.domain.Badge;
-import com.example.demowithtests.domain.Photo;
+import com.example.demowithtests.dto.AddressDto.AddressDto;
+import com.example.demowithtests.dto.BadgeDto.BadgeRequestDto;
+import com.example.demowithtests.dto.PhotoDto.PhotoDto;
 import com.example.demowithtests.util.anotations.validation.Password;
 import com.example.demowithtests.util.anotations.validation.Phone;
 import com.example.demowithtests.domain.Gender;
@@ -12,7 +13,6 @@ import lombok.ToString;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

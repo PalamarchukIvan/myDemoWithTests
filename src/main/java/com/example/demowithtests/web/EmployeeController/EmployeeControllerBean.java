@@ -1,9 +1,13 @@
-package com.example.demowithtests.web;
+package com.example.demowithtests.web.EmployeeController;
 
 import com.example.demowithtests.domain.Employee;
-import com.example.demowithtests.dto.*;
-import com.example.demowithtests.service.EmployeeService;
-import com.example.demowithtests.service.PhotoServiceBean;
+import com.example.demowithtests.dto.BadgeDto.BadgeRequestDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeForPatchDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeReadDto;
+import com.example.demowithtests.dto.PhotoDto.PhotoDto;
+import com.example.demowithtests.service.EmployeeSeeervice.EmployeeService;
+import com.example.demowithtests.service.PhotoService.PhotoServiceBean;
 import com.example.demowithtests.util.config.MapStruct.BadgeMapper;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
 import com.example.demowithtests.util.exception.ResourceIsPrivateException;
@@ -174,17 +178,6 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     public byte[] getPhoto(@PathVariable Integer id) {
         return photoService.findPhoto(id);
     }
-
-//    @GetMapping("/test")
-//    public String test(){
-//        return "<!DOCTYPE html>\n"+
-//                "<html>\n" +
-//                "<head></head>\n"+
-//                "<body>\n" +
-//                "\t<img src = \"C:\\Users\\Иван\\Desktop\\Hillel\\myDemoWithTests\\employee-photos\\employee-1\\employee-1 7.png\">\n" +
-//                "</body>\n" +
-//                "</html>\n";
-//    }
 
     @GetMapping("/users/notify_photos")
     @ResponseStatus(HttpStatus.OK)

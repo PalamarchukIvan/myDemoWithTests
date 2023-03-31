@@ -3,6 +3,7 @@ package com.example.demowithtests.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "badges")
@@ -20,6 +21,9 @@ public class Badge {
     private String firstName;
     private String lastName;
     private String position;
+    private String key  = UUID.randomUUID().toString();
+    @Enumerated(EnumType.STRING)
+    private State currentState = State.ACTIVE;
     @OneToOne(mappedBy = "badge")
     private Employee employee;
     @Column(columnDefinition = "BOOLEAN DEFAULT 'false'")
@@ -28,19 +32,8 @@ public class Badge {
     @JoinColumn(name = "previous_id")
     private Badge previousBadge;
 
-    @Override
-    public String toString() {
-        String sEmployee = "";
-        if(employee != null) {
-            sEmployee = employee.getName();
-        }
-        return "Badge{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", position='" + position + '\'' +
-                ", employee=" + sEmployee +
-                ", isPrivate=" + isPrivate +
-                '}';
+    public enum State {
+        ACTIVE, LOST, BROKEN, EXPIRED, ANOTHER;
     }
+
 }

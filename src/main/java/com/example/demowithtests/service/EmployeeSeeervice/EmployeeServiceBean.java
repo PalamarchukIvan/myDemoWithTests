@@ -1,13 +1,14 @@
-package com.example.demowithtests.service;
+package com.example.demowithtests.service.EmployeeSeeervice;
 
 import com.example.demowithtests.domain.*;
 import com.example.demowithtests.repository.EmployeeRepository;
+import com.example.demowithtests.service.BadgeService.BadgeService;
+import com.example.demowithtests.service.EmailService.EmailService;
 import com.example.demowithtests.util.anotations.formatingAnnotations.InitMyAnnotations;
 import com.example.demowithtests.util.anotations.formatingAnnotations.Name;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

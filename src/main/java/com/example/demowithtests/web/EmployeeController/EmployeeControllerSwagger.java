@@ -1,9 +1,9 @@
-package com.example.demowithtests.web;
+package com.example.demowithtests.web.EmployeeController;
 
-import com.example.demowithtests.dto.EmployeeDto;
-import com.example.demowithtests.dto.EmployeeForPatchDto;
-import com.example.demowithtests.dto.EmployeeReadDto;
-import com.example.demowithtests.dto.PhotoDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeForPatchDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeReadDto;
+import com.example.demowithtests.dto.PhotoDto.PhotoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 public interface EmployeeControllerSwagger extends EmployeeController{
 

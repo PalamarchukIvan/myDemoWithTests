@@ -1,6 +1,7 @@
-package com.example.demowithtests.service;
+package com.example.demowithtests.service.BadgeService;
 
 import com.example.demowithtests.domain.Badge;
+import com.example.demowithtests.domain.Badge.State;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.repository.BadgeRepository;
 import com.example.demowithtests.repository.EmployeeRepository;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,8 +40,14 @@ public class BadgeServiceBean implements BadgeService {
 
     @Override
     public void deleteBudge(Integer id) {
+        deleteBudge(id, Badge.State.EXPIRED);
+    }
+
+    @Override
+    public void deleteBudge(Integer id, Badge.State reason) {
         Badge badge = badgeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         badge.setIsPrivate(Boolean.TRUE);
+        badge.setCurrentState(reason);
         if (badge.getEmployee() != null) {
             Employee formerEmployee = badge.getEmployee();
             formerEmployee.setBadge(null);
@@ -57,6 +65,7 @@ public class BadgeServiceBean implements BadgeService {
                     badge.setFirstName(updateBadge.getFirstName());
                     badge.setLastName(updateBadge.getLastName());
                     badge.setPosition(updateBadge.getPosition());
+                    badge.setCurrentState(updateBadge.getCurrentState());
                     return badgeRepository.save(badge);
                 }).orElseThrow(ResourceNotFoundException::new);
     }
@@ -64,7 +73,6 @@ public class BadgeServiceBean implements BadgeService {
     @Override
     public Badge updateBadgeToEmployee(Badge badge) {
         if (badge.getEmployee() == null) return badge;
-        System.err.println("  ");
         badge.setFirstName(badge.getEmployee().getName().split(" ")[0]);
         badge.setLastName(badge.getEmployee().getName().split(" ")[1]);
         return badgeRepository.save(badge);
@@ -79,6 +87,8 @@ public class BadgeServiceBean implements BadgeService {
                 .firstName(badge.getFirstName())
                 .position(badge.getPosition())
                 .isPrivate(badge.getIsPrivate())
+                .key(UUID.randomUUID().toString())
+                .currentState(Badge.State.ACTIVE)
                 .build();
         badge.setIsPrivate(Boolean.TRUE);
         badgeRepository.save(badge);
@@ -87,6 +97,6 @@ public class BadgeServiceBean implements BadgeService {
 
     @Override
     public List<Badge> showBadgeTree(Integer id) {
-        return badgeRepository.getBadgeTree(id);
+        return badgeRepository.getBadgeHistory(id);
     }
 }

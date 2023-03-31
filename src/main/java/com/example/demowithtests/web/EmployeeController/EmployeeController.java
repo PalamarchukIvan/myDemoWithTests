@@ -1,6 +1,10 @@
-package com.example.demowithtests.web;
+package com.example.demowithtests.web.EmployeeController;
 
-import com.example.demowithtests.dto.*;
+import com.example.demowithtests.dto.BadgeDto.BadgeRequestDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeForPatchDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeReadDto;
+import com.example.demowithtests.dto.PhotoDto.PhotoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.HttpMediaTypeNotSupportedException;

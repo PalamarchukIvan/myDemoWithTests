@@ -1,12 +1,13 @@
-package com.example.demowithtests.dto;
+package com.example.demowithtests.dto.EmployeeDto;
 
+import com.example.demowithtests.dto.AddressDto.AddressDto;
+import com.example.demowithtests.dto.BadgeDto.BadgeRequestDto;
 import com.example.demowithtests.util.anotations.validation.Password;
 import com.example.demowithtests.util.anotations.validation.Phone;
 import com.example.demowithtests.domain.Gender;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 public class EmployeeForPatchDto {

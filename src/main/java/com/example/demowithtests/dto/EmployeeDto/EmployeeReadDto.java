@@ -1,6 +1,9 @@
-package com.example.demowithtests.dto;
+package com.example.demowithtests.dto.EmployeeDto;
 
 import com.example.demowithtests.domain.Gender;
+import com.example.demowithtests.dto.AddressDto.AddressDto;
+import com.example.demowithtests.dto.BadgeDto.BadgeResponseDto;
+import com.example.demowithtests.dto.PhotoDto.PhotoReadDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.Email;
