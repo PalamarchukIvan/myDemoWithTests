@@ -41,6 +41,12 @@ public class BadgeController {
     public List<BadgeResponseDto> getAll() {
         return BadgeMapper.INSTANCE.badgeToBadgeResponseDto(badgeService.getAllBadges());
     }
+    @GetMapping("/badges/tree/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<BadgeResponseDto> getBadgeHierarchy(@PathVariable Integer id){
+        System.err.println(badgeService.showBadgeTree(id));
+        return BadgeMapper.INSTANCE.badgeToBadgeResponseDto(badgeService.showBadgeTree(id));
+    }
     @DeleteMapping("/badges/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void removeById (@PathVariable Integer id) {

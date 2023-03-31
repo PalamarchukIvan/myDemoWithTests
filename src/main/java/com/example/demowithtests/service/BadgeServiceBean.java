@@ -32,6 +32,7 @@ public class BadgeServiceBean implements BadgeService {
 
     @Override
     public List<Badge> getAllBadges() {
+        System.err.println(badgeRepository.findAll().stream().map(Badge::getEmployee).collect(Collectors.toList()));
         return badgeRepository.findAll().stream().filter(badge -> !badge.getIsPrivate()).collect(Collectors.toList());
     }
 
@@ -39,10 +40,9 @@ public class BadgeServiceBean implements BadgeService {
     public void deleteBudge(Integer id) {
         Badge badge = badgeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         badge.setIsPrivate(Boolean.TRUE);
-        if(badge.getEmployee() != null) {
+        if (badge.getEmployee() != null) {
             Employee formerEmployee = badge.getEmployee();
             formerEmployee.setBadge(null);
-            badge.setEmployee(null);
             employeeRepository.save(formerEmployee);
         }
         badgeRepository.save(badge);
@@ -63,10 +63,30 @@ public class BadgeServiceBean implements BadgeService {
 
     @Override
     public Badge updateBadgeToEmployee(Badge badge) {
-        if(badge.getEmployee() == null) return badge;
+        if (badge.getEmployee() == null) return badge;
         System.err.println("  ");
         badge.setFirstName(badge.getEmployee().getName().split(" ")[0]);
         badge.setLastName(badge.getEmployee().getName().split(" ")[1]);
         return badgeRepository.save(badge);
+    }
+
+    @Override
+    public Badge inheriteBadge(Badge badge) {
+        Badge newBadge = Badge.builder()
+                .previousBadge(badge)
+                .employee(badge.getEmployee())
+                .lastName(badge.getLastName())
+                .firstName(badge.getFirstName())
+                .position(badge.getPosition())
+                .isPrivate(badge.getIsPrivate())
+                .build();
+        badge.setIsPrivate(Boolean.TRUE);
+        badgeRepository.save(badge);
+        return badgeRepository.save(newBadge);
+    }
+
+    @Override
+    public List<Badge> showBadgeTree(Integer id) {
+        return badgeRepository.getBadgeTree(id);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.demowithtests.web;
 
-import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -10,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 public interface EmployeeController {
 
@@ -24,6 +22,8 @@ public interface EmployeeController {
     List<EmployeeReadDto> getAllUsers();
     EmployeeReadDto updateBadge(Integer idEmployee, Integer idBadge);
     EmployeeReadDto updateBadgeInstantly(Integer idEmployee, BadgeRequestDto badge);
+
+    EmployeeReadDto updateBadgeInherently(Integer idEmployee);
 
     Page<EmployeeReadDto> getPage(int page, int size);
 

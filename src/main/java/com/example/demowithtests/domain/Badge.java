@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "bagdes")
+@Table(name = "badges")
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Builder
 public class Badge {
     @Id
+    @JoinColumn(name = "previous_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String firstName;
@@ -23,6 +24,9 @@ public class Badge {
     private Employee employee;
     @Column(columnDefinition = "BOOLEAN DEFAULT 'false'")
     private Boolean isPrivate = Boolean.FALSE;
+    @OneToOne()
+    @JoinColumn(name = "previous_id")
+    private Badge previousBadge;
 
     @Override
     public String toString() {

@@ -4,7 +4,6 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.*;
 import com.example.demowithtests.service.EmployeeService;
 import com.example.demowithtests.service.PhotoServiceBean;
-import com.example.demowithtests.util.anotations.validation.Image;
 import com.example.demowithtests.util.config.MapStruct.BadgeMapper;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;
 import com.example.demowithtests.util.exception.ResourceIsPrivateException;
@@ -25,7 +24,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -60,22 +58,30 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
         EmployeeDto employee = EmployeeMapper.INSTANCE.employeeToEmployeeDto(employeeService.getById(id));
         return employee.photos;
     }
+
     //Получение списка юзеров
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsers() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.filterPrivateEmployees(employeeService.getAll()));
     }
+
     @PatchMapping("/users/{idEmployee}/badge/{idBadge}")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto updateBadge(@PathVariable Integer idEmployee, @PathVariable Integer idBadge) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.addBadge(idEmployee, idBadge));
     }
 
-    @PatchMapping("/users/{idEmployee}/badge/")
+    @PatchMapping("/users/{idEmployee}/badge")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto updateBadgeInstantly(@PathVariable Integer idEmployee, @RequestBody BadgeRequestDto badge) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.addBadge(idEmployee, BadgeMapper.INSTANCE.badgeRequestDtoToBadge(badge)));
+    }
+
+    @PatchMapping("/users/{idEmployee}/badge/inheritance")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeReadDto updateBadgeInherently(@PathVariable Integer idEmployee) {
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.updateBadge(idEmployee));
     }
 
     @GetMapping("/users/p")

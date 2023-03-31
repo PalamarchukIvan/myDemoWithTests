@@ -186,6 +186,8 @@ public class EmployeeServiceBean implements EmployeeService {
         return employeeRepository.saveAll(listExEmployees);
     }
 
+
+
     @Override
     public Employee addBadge(Integer idEmployee, Integer idBadge) {
         Badge badge = badgeService.getById(idBadge);
@@ -207,6 +209,14 @@ public class EmployeeServiceBean implements EmployeeService {
     public Employee addBadge(Integer idEmployee, Badge badge) {
         badgeService.create(badge);
         return addBadge(idEmployee, badge.getId());
+    }
+
+    @Override
+    public Employee updateBadge(Integer idEmployee) {
+        Employee employee = employeeRepository.findById(idEmployee).orElseThrow(ResourceNotFoundException::new);
+        Badge newBadge = badgeService.inheriteBadge(employee.getBadge());
+        employee.setBadge(newBadge);
+        return employeeRepository.save(employee);
     }
 
     @Override
