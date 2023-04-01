@@ -80,6 +80,8 @@ public class BadgeServiceBean implements BadgeService {
 
     @Override
     public Badge inheriteBadge(Badge badge) {
+        if(badge == null)
+            return null;
         Badge newBadge = Badge.builder()
                 .previousBadge(badge)
                 .employee(badge.getEmployee())
@@ -91,6 +93,7 @@ public class BadgeServiceBean implements BadgeService {
                 .currentState(Badge.State.ACTIVE)
                 .build();
         badge.setIsPrivate(Boolean.TRUE);
+        badge.setCurrentState(State.CHANGED);
         badgeRepository.save(badge);
         return badgeRepository.save(newBadge);
     }

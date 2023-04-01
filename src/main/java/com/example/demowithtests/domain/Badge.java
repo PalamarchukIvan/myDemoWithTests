@@ -33,7 +33,7 @@ public class Badge {
     private Badge previousBadge;
 
     public enum State {
-        ACTIVE, LOST, BROKEN, EXPIRED, ANOTHER;
+        ACTIVE, LOST, BROKEN, EXPIRED, CHANGED, ANOTHER;
     }
 
 }
