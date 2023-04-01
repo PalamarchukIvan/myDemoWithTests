@@ -9,7 +9,6 @@ public interface BadgeService {
     Badge getById(Integer id);
     Badge create(Badge badge);
     List<Badge> getAllBadges();
-    void deleteBudge(Integer id);
     void deleteBudge(Integer id, Badge.State reason);
     Badge updateBudge(Integer id, Badge updateBadge);
     Badge updateBadgeToEmployee(Badge badge);

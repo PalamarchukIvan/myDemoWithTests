@@ -39,11 +39,6 @@ public class BadgeServiceBean implements BadgeService {
     }
 
     @Override
-    public void deleteBudge(Integer id) {
-        deleteBudge(id, Badge.State.EXPIRED);
-    }
-
-    @Override
     public void deleteBudge(Integer id, Badge.State reason) {
         Badge badge = badgeRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         badge.setIsPrivate(Boolean.TRUE);

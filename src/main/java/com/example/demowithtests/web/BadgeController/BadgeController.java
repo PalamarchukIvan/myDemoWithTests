@@ -46,13 +46,8 @@ public class BadgeController {
     public List<BadgeResponseDto> getBadgeHierarchy(@PathVariable Integer id){
         return BadgeMapper.INSTANCE.badgeToBadgeResponseDto(badgeService.showBadgeTree(id));
     }
-    @DeleteMapping("/badges/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void removeById (@PathVariable Integer id) {
-        badgeService.deleteBudge(id);
-    }
 
-    @DeleteMapping("/badges/withReason/{id}")
+    @DeleteMapping("/badges/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void removeById (@PathVariable Integer id, @RequestParam(required = false, name = "reason", defaultValue = "ANOTHER" ) Badge.State reason) {
         badgeService.deleteBudge(id, reason);
