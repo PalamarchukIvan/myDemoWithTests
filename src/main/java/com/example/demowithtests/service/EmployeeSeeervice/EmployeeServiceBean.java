@@ -213,9 +213,9 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
     @Override
-    public Employee updateBadge(Integer idEmployee) {
+    public Employee updateBadge(Integer idEmployee, Badge.State reason) {
         Employee employee = employeeRepository.findById(idEmployee).orElseThrow(ResourceNotFoundException::new);
-        Badge newBadge = badgeService.inheriteBadge(employee.getBadge());
+        Badge newBadge = badgeService.inheriteBadge(employee.getBadge(), reason);
         employee.setBadge(newBadge);
         return employeeRepository.save(employee);
     }

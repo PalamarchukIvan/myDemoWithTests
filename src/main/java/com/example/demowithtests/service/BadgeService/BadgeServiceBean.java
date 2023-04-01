@@ -74,7 +74,7 @@ public class BadgeServiceBean implements BadgeService {
     }
 
     @Override
-    public Badge inheriteBadge(Badge badge) {
+    public Badge inheriteBadge(Badge badge, Badge.State reason) {
         if(badge == null)
             return null;
         Badge newBadge = Badge.builder()
@@ -88,7 +88,7 @@ public class BadgeServiceBean implements BadgeService {
                 .currentState(Badge.State.ACTIVE)
                 .build();
         badge.setIsPrivate(Boolean.TRUE);
-        badge.setCurrentState(State.CHANGED);
+        badge.setCurrentState(reason);
         badgeRepository.save(badge);
         return badgeRepository.save(newBadge);
     }

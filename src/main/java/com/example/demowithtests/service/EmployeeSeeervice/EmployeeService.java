@@ -5,9 +5,7 @@ import com.example.demowithtests.domain.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
-import java.util.Optional;
 
 public interface EmployeeService {
 
@@ -36,5 +34,5 @@ public interface EmployeeService {
     List<Employee> updateEmployeesWithExpiredPhotos();
     Employee addBadge(Integer idEmployee, Integer idBadge);
     Employee addBadge(Integer idEmployee, Badge Badge);
-    Employee updateBadge(Integer idEmployee);
+    Employee updateBadge(Integer idEmployee, Badge.State reason);
 }

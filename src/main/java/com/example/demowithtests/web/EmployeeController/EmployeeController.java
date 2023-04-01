@@ -1,5 +1,6 @@
 package com.example.demowithtests.web.EmployeeController;
 
+import com.example.demowithtests.domain.Badge;
 import com.example.demowithtests.dto.BadgeDto.BadgeRequestDto;
 import com.example.demowithtests.dto.EmployeeDto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeDto.EmployeeForPatchDto;
@@ -27,7 +28,7 @@ public interface EmployeeController {
     EmployeeReadDto updateBadge(Integer idEmployee, Integer idBadge);
     EmployeeReadDto updateBadgeInstantly(Integer idEmployee, BadgeRequestDto badge);
 
-    EmployeeReadDto updateBadgeInherently(Integer idEmployee);
+    EmployeeReadDto updateBadgeInherently(Integer idEmployee, Badge.State reason);
 
     Page<EmployeeReadDto> getPage(int page, int size);
 

@@ -29,26 +29,29 @@ public class BadgeControllerBean implements BadgeController {
     public BadgeResponseDto readById(@PathVariable Integer id) {
         return BadgeMapper.INSTANCE.badgeToBadgeResponseDto(badgeService.getById(id));
     }
+
     @PutMapping("/badges/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BadgeResponseDto updateById(@PathVariable Integer id, @RequestBody BadgeRequestDto badgeRequestDto) {
         return BadgeMapper.INSTANCE.badgeToBadgeResponseDto(
                 badgeService.updateBudge(id, BadgeMapper.INSTANCE.badgeRequestDtoToBadge(badgeRequestDto)));
     }
+
     @GetMapping("/badges")
     @ResponseStatus(HttpStatus.OK)
     public List<BadgeResponseDto> getAll() {
         return BadgeMapper.INSTANCE.badgeToBadgeResponseDto(badgeService.getAllBadges());
     }
+
     @GetMapping("/badges/tree/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<BadgeResponseDto> getBadgeHierarchy(@PathVariable Integer id){
+    public List<BadgeResponseDto> getBadgeHierarchy(@PathVariable Integer id) {
         return BadgeMapper.INSTANCE.badgeToBadgeResponseDto(badgeService.showBadgeHistory(id));
     }
 
     @DeleteMapping("/badges/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void removeById (@PathVariable Integer id, @RequestParam(required = false, name = "reason", defaultValue = "ANOTHER" ) Badge.State reason) {
+    public void removeById(@PathVariable Integer id, @RequestParam(required = false, name = "reason", defaultValue = "ANOTHER") Badge.State reason) {
         badgeService.deleteBudge(id, reason);
     }
 }

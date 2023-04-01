@@ -1,5 +1,6 @@
 package com.example.demowithtests.web.EmployeeController;
 
+import com.example.demowithtests.domain.Badge;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.dto.BadgeDto.BadgeRequestDto;
 import com.example.demowithtests.dto.EmployeeDto.EmployeeDto;
@@ -84,8 +85,10 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
 
     @PatchMapping("/users/{idEmployee}/badge/inheritance")
     @ResponseStatus(HttpStatus.OK)
-    public EmployeeReadDto updateBadgeInherently(@PathVariable Integer idEmployee) {
-        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.updateBadge(idEmployee));
+    public EmployeeReadDto updateBadgeInherently(@PathVariable Integer idEmployee,
+                                                 @RequestParam(required = false, name = "reason", defaultValue = "CHANGED") Badge.State reason) {
+        System.err.println("controller: " + reason);
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.updateBadge(idEmployee, reason));
     }
 
     @GetMapping("/users/p")

@@ -11,6 +11,6 @@ public interface BadgeService {
     void deleteBudge(Integer id, Badge.State reason);
     Badge updateBudge(Integer id, Badge updateBadge);
     Badge updateBadgeToEmployee(Badge badge);
-    Badge inheriteBadge(Badge badge);
+    Badge inheriteBadge(Badge badge, Badge.State reason);
     List<Badge> showBadgeHistory(Integer id);
 }
