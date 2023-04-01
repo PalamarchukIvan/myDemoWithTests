@@ -94,7 +94,7 @@ public class BadgeServiceBean implements BadgeService {
     }
 
     @Override
-    public List<Badge> showBadgeTree(Integer id) {
+    public List<Badge> showBadgeHistory(Integer id) {
         return badgeRepository.getBadgeHistory(id);
     }
 }

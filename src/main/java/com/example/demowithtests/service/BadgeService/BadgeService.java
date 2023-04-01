@@ -1,7 +1,6 @@
 package com.example.demowithtests.service.BadgeService;
 
 import com.example.demowithtests.domain.Badge;
-import com.example.demowithtests.domain.Badge.State;
 
 import java.util.List;
 
@@ -13,5 +12,5 @@ public interface BadgeService {
     Badge updateBudge(Integer id, Badge updateBadge);
     Badge updateBadgeToEmployee(Badge badge);
     Badge inheriteBadge(Badge badge);
-    List<Badge> showBadgeTree(Integer id);
+    List<Badge> showBadgeHistory(Integer id);
 }

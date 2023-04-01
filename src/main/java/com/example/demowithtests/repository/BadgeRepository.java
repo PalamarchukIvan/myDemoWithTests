@@ -9,14 +9,14 @@ import java.util.List;
 
 @Repository
 public interface BadgeRepository extends JpaRepository<Badge, Integer> {
-    @Query(value = "WITH RECURSIVE badge_tree AS (\n" +
+    @Query(value = "WITH RECURSIVE badge_ AS (\n" +
             "  SELECT *\n" +
             "  FROM badges b\n WHERE id = :id\n" +
             "  UNION ALL\n" +
             "  SELECT b.*\n" +
             "  FROM badges b\n" +
-            "  INNER JOIN badge_tree bt ON b.id = bt.previous_id\n" +
+            "  INNER JOIN badge_ b_ ON b.id = b_.previous_id\n" +
             ") \n" +
-            "SELECT * FROM badge_tree;", nativeQuery = true)
+            "SELECT * FROM badge_;", nativeQuery = true)
     List<Badge> getBadgeHistory(Integer id);
 }
