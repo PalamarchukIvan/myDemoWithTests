@@ -40,14 +40,14 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     private final PhotoServiceBean photoService;
 
     //Операция сохранения юзера в базу данных
-    @PostMapping("/users")
+    @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeReadDto saveEmployee(@RequestBody @Valid EmployeeDto requestForSave) {
         var employee = EmployeeMapper.INSTANCE.employeeDtoToEmployee(requestForSave);
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.create(employee));
     }
 
-    @PostMapping(value = "/users/addPhoto/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/employees/addPhoto/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeReadDto addPhotoToEmployee(@RequestParam MultipartFile image, @PathVariable Integer id) throws IOException, HttpMediaTypeNotSupportedException {
         if (!Objects.equals(image.getContentType(), "image/png") && !Objects.equals(image.getContentType(), "image/jpeg"))
@@ -57,7 +57,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employee);
     }
 
-    @GetMapping("/users/getPhotos/{id}")
+    @GetMapping("/employees/getPhotos/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public List<PhotoDto> getAllPhotoFromEmployee(@PathVariable Integer id) {
         EmployeeDto employee = EmployeeMapper.INSTANCE.employeeToEmployeeDto(employeeService.getById(id));
@@ -65,25 +65,25 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     }
 
     //Получение списка юзеров
-    @GetMapping("/users")
+    @GetMapping("/employees")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsers() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.filterPrivateEmployees(employeeService.getAll()));
     }
 
-    @PatchMapping("/users/{idEmployee}/badge/{idBadge}")
+    @PatchMapping("/employees/{idEmployee}/badge/{idBadge}")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto updateBadge(@PathVariable Integer idEmployee, @PathVariable Integer idBadge) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.addBadge(idEmployee, idBadge));
     }
 
-    @PatchMapping("/users/{idEmployee}/badge")
+    @PatchMapping("/employees/{idEmployee}/badge")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto updateBadgeInstantly(@PathVariable Integer idEmployee, @RequestBody BadgeRequestDto badge) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.addBadge(idEmployee, BadgeMapper.INSTANCE.badgeRequestDtoToBadge(badge)));
     }
 
-    @PatchMapping("/users/{idEmployee}/badge/inheritance")
+    @PatchMapping("/employees/{idEmployee}/badge/inheritance")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto updateBadgeInherently(@PathVariable Integer idEmployee,
                                                  @RequestParam(required = false, name = "reason", defaultValue = "CHANGED") Badge.State reason) {
@@ -91,7 +91,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.updateBadge(idEmployee, reason));
     }
 
-    @GetMapping("/users/p")
+    @GetMapping("/employees/p")
     @ResponseStatus(HttpStatus.OK)
     public Page<EmployeeReadDto> getPage(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "5") int size) {
@@ -100,7 +100,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     }
 
     //Получения юзера по id
-    @GetMapping("/users/{id}")
+    @GetMapping("/employees/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto getEmployeeById(@PathVariable Integer id) {
         var employee = employeeService.getById(id);
@@ -109,14 +109,14 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     }
 
     //Обновление юзера
-    @PutMapping("/users/{id}")
+    @PutMapping("/employees/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto refreshEmployeePut(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeForPatchDto employee) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.repostById(id, EmployeeMapper.INSTANCE.employeeForPatchDtoToEmployee(employee)));
     }
 
-    @PatchMapping("/users/{id}")
+    @PatchMapping("/employees/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeReadDto refreshEmployeePatch(@PathVariable("id") Integer id, @RequestBody @Valid EmployeeForPatchDto employee) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
@@ -124,20 +124,20 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     }
 
     //Удаление по id
-    @PatchMapping("/users/delete/{id}")
+    @PatchMapping("/employees/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEmployeeById(@PathVariable Integer id) {
         employeeService.removeById(id);
     }
 
     //Удаление всех юзеров
-    @DeleteMapping("/users")
+    @DeleteMapping("/employees")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeAllUsers() {
         employeeService.removeAll();
     }
 
-    @GetMapping("/users/country")
+    @GetMapping("/employees/country")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> findByCountry(@RequestParam(required = false) String country,
                                                @RequestParam(defaultValue = "0") int page,
@@ -149,46 +149,46 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
                 employeeService.findByCountryContaining(country, page, size, sortList, sortOrder.toString()).toList());
     }
 
-    @GetMapping("/users/addresses")
+    @GetMapping("/employees/addresses")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsersWithAddresses() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.filterPrivateEmployees(employeeService.findEmployeeIfAddressPresent()));
     }
 
-    @GetMapping("/users/char")
+    @GetMapping("/employees/char")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsersByNamePartly(@RequestParam String letters) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.filterPrivateEmployees(employeeService.findEmployeeByPartOfTheName(letters)));
     }
 
-    @PostMapping("/users/generation/{number}")
+    @PostMapping("/employees/generation/{number}")
     @ResponseStatus(HttpStatus.OK)
     public void generateTestSetOfEntities(@PathVariable int number) {
         employeeService.generateTestDatabase(number);
     }
 
-    @GetMapping("/users/expired_photos")
+    @GetMapping("/employees/expired_photos")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllWithExpiredPhotos() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.findEmployeesWithExpiredPhotos());
     }
 
-    @GetMapping(value = "/users/photo/{id}",
+    @GetMapping(value = "/employees/photo/{id}",
             produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public byte[] getPhoto(@PathVariable Integer id) {
         return photoService.findPhoto(id);
     }
 
-    @GetMapping("/users/notify_photos")
+    @GetMapping("/employees/notify_photos")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> notifyAllWithExpiredPhotos() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.updateEmployeesWithExpiredPhotos());
     }
 
-    @DeleteMapping("/users/photo/{id}")
+    @DeleteMapping("/employees/photo/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void removePhoto(@PathVariable Integer id) {
         photoService.deletePhoto(id);

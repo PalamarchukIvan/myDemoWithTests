@@ -125,7 +125,8 @@ public class EmployeeServiceBean implements EmployeeService {
     public void removeById(Integer id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
-        employeeRepository.delete(employee);
+        employee.setIsPrivate(Boolean.TRUE);
+        employeeRepository.save(employee);
     }
 
     @Override

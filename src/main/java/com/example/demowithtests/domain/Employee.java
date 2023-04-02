@@ -11,10 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "employees")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Setter
 @Getter
 @Builder
@@ -44,4 +43,6 @@ public class Employee {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "badge_id", referencedColumnName = "id")
     private Badge badge;
+    @ManyToMany(mappedBy = "employees", cascade = CascadeType.ALL)
+    private Set<Project> projects;
 }
