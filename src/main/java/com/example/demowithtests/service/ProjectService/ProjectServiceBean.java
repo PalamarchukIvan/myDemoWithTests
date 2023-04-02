@@ -3,7 +3,7 @@ package com.example.demowithtests.service.ProjectService;
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Project;
 import com.example.demowithtests.repository.ProjectRepository;
-import com.example.demowithtests.service.EmployeeSeeervice.EmployeeService;
+import com.example.demowithtests.service.EmployeeService.EmployeeService;
 import com.example.demowithtests.util.exception.ResourceException;
 import com.example.demowithtests.util.exception.ResourceIsPrivateException;
 import com.example.demowithtests.util.exception.ResourceNotFoundException;
@@ -11,13 +11,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class ProjectServiceBean implements ProjectService{
+public class ProjectServiceBean implements ProjectService {
     private final ProjectRepository projectRepository;
     private final EmployeeService employeeService;
+
     @Override
     public Project create(Project project) {
         return projectRepository.save(project);
@@ -26,7 +28,7 @@ public class ProjectServiceBean implements ProjectService{
     @Override
     public Project getById(Integer id) {
         Project project = projectRepository.findById(id).orElseThrow(ResourceException::new);
-        if(project.getIsPrivate()) throw new ResourceIsPrivateException();
+        if (project.getIsPrivate()) throw new ResourceIsPrivateException();
         return project;
     }
 
@@ -42,14 +44,26 @@ public class ProjectServiceBean implements ProjectService{
     public Project updateById(Integer id, Project update) {
         return projectRepository.findById(id)
                 .map(project -> {
-                    project.setLanguage(update.getLanguage());
-                    project.setDeadLine(project.getDeadLine());
-                    project.setBackLog(update.getBackLog());
-                    project.setStartDate(update.getStartDate());
-                    project.setDeadLine(update.getDeadLine());
+                    if (update == null) return project;
+
+                    if (update.getLanguage() != project.getLanguage())
+                        project.setLanguage(update.getLanguage());
+
+                    if (update.getDeadLine() != project.getDeadLine())
+                        project.setDeadLine(project.getDeadLine());
+
+                    if (!Objects.equals(update.getBackLog(), project.getBackLog()))
+                        project.setBackLog(update.getBackLog());
+
+                    if (update.getStartDate() != project.getStartDate())
+                        project.setStartDate(update.getStartDate());
+
+                    if (update.getDeadLine() != project.getDeadLine())
+                        project.setDeadLine(update.getDeadLine());
+
                     projectRepository.save(project);
                     return project;
-                } )
+                })
                 .orElseThrow(ResourceNotFoundException::new);
     }
 
@@ -60,6 +74,7 @@ public class ProjectServiceBean implements ProjectService{
         projectRepository.save(project);
 
     }
+
     @Override
     public Project addEmployeeToProject(Integer idEmployee, Integer idProject) {
         Employee employee = employeeService.getById(idEmployee);

@@ -7,7 +7,7 @@ import com.example.demowithtests.dto.EmployeeDto.EmployeeDto;
 import com.example.demowithtests.dto.EmployeeDto.EmployeeForPatchDto;
 import com.example.demowithtests.dto.EmployeeDto.EmployeeReadDto;
 import com.example.demowithtests.dto.PhotoDto.PhotoDto;
-import com.example.demowithtests.service.EmployeeSeeervice.EmployeeService;
+import com.example.demowithtests.service.EmployeeService.EmployeeService;
 import com.example.demowithtests.service.PhotoService.PhotoServiceBean;
 import com.example.demowithtests.util.config.MapStruct.BadgeMapper;
 import com.example.demowithtests.util.config.MapStruct.EmployeeMapper;

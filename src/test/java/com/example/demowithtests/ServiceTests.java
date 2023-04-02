@@ -2,7 +2,7 @@ package com.example.demowithtests;
 
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.repository.EmployeeRepository;
-import com.example.demowithtests.service.EmployeeSeeervice.EmployeeServiceBean;
+import com.example.demowithtests.service.EmployeeService.EmployeeServiceBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;

@@ -1,4 +1,4 @@
-package com.example.demowithtests.service.EmployeeSeeervice;
+package com.example.demowithtests.service.EmployeeService;
 
 import com.example.demowithtests.domain.*;
 import com.example.demowithtests.repository.EmployeeRepository;

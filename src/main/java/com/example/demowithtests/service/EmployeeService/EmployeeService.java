@@ -1,4 +1,4 @@
-package com.example.demowithtests.service.EmployeeSeeervice;
+package com.example.demowithtests.service.EmployeeService;
 
 import com.example.demowithtests.domain.Badge;
 import com.example.demowithtests.domain.Employee;
