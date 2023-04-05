@@ -65,4 +65,12 @@ public class ProjectControllerBean implements ProjectController{
         return ProjectMapper.INSTANCE.projectToProjectResponseDto(
                 projectService.addEmployeeToProject(idEmployee, idProject));
     }
+
+    @Override
+    @DeleteMapping("/{idProject}/employee/{idEmployee}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProjectResponseDto deleteEmployeeFromProject(@PathVariable Integer idEmployee, @PathVariable Integer idProject) {
+        return ProjectMapper.INSTANCE.projectToProjectResponseDto(
+                projectService.removeEmployeeFromProject(idEmployee, idProject));
+    }
 }

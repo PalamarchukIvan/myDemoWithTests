@@ -13,4 +13,5 @@ public interface ProjectController {
     void removeProject(Integer id);
     ProjectResponseDto patchProject(Integer id, ProjectRequestDto toUpdateProject);
     ProjectResponseDto addEmployeeToProject(Integer idEmployee, Integer idProject);
+    ProjectResponseDto deleteEmployeeFromProject(Integer idEmployee, Integer idProject);
 }

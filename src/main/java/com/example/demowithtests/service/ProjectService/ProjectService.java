@@ -11,4 +11,5 @@ public interface ProjectService {
     Project updateById(Integer id, Project project);
     void removeById(Integer id);
     Project addEmployeeToProject(Integer idEmployee, Integer idProject);
+    Project removeEmployeeFromProject(Integer idEmployee, Integer idProject);
 }

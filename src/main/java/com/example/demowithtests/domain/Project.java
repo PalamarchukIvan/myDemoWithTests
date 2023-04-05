@@ -1,5 +1,6 @@
 package com.example.demowithtests.domain;
 
+import com.example.demowithtests.domain.ProjectsToEmployees.ProjectEmployee;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,8 +25,9 @@ public class Project {
     private LocalDate deadLine;
     private String backLog;
     private Boolean isPrivate = Boolean.FALSE;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Set<Employee> employees;
+    @OneToMany
+    @JoinColumn(name = "project_id")
+    private Set<ProjectEmployee> employees;
 
     public enum Language {
         JAVA, PYTHON, CPP, CSh, RUBY

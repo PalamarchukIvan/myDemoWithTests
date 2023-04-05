@@ -38,7 +38,7 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public List<Employee> getAll() {
-        return employeeRepository.findAll();
+        return employeeRepository.findAll().stream().filter(employee -> !employee.getIsPrivate()).collect(Collectors.toList());
     }
 
     @Override
@@ -157,21 +157,18 @@ public class EmployeeServiceBean implements EmployeeService {
     }
     @Override
     public List<Employee> findEmployeeIfAddressPresent() {
-        return employeeRepository.findEmployeeByPresentAddress();
+        return employeeRepository.findEmployeeByPresentAddress()
+                .stream()
+                .filter(employee -> !employee.getIsPrivate())
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Employee> findEmployeeByPartOfTheName(String letters) {
-        return employeeRepository.findEmployeeByPartOfTheName(letters);
-    }
-
-    public List<Employee> filterPrivateEmployees(List<Employee> employees) {
-        return employees.stream()
-                .peek(employee -> {
-                    if (employee.getIsPrivate()) {
-                        makeEmployeeDataPrivate(employee);
-                    }
-                }).collect(Collectors.toList());
+        return employeeRepository.findEmployeeByPartOfTheName(letters)
+                .stream()
+                .filter(employee -> !employee.getIsPrivate())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -251,16 +248,5 @@ public class EmployeeServiceBean implements EmployeeService {
                         .build()
                 ))
                 .build();
-    }
-
-    private void makeEmployeeDataPrivate(Employee employee) {
-        employee.setName("Is private");
-        employee.setAddresses(null);
-        employee.setCountry("Is private");
-        employee.setEmail("Is private");
-        employee.setGender(null);
-        employee.setPassword("is private");
-        employee.setPhone("is private");
-        employee.setPhotos(null);
     }
 }

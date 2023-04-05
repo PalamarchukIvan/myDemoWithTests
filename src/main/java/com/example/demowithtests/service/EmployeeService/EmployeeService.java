@@ -28,7 +28,6 @@ public interface EmployeeService {
 
     List<Employee> findEmployeeIfAddressPresent();
     List<Employee> findEmployeeByPartOfTheName(String letters);
-    List<Employee> filterPrivateEmployees(List<Employee> employees);
     void generateTestDatabase(int numberOfEntities);
     List<Employee> findEmployeesWithExpiredPhotos();
     List<Employee> updateEmployeesWithExpiredPhotos();

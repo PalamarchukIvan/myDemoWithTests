@@ -26,6 +26,6 @@ public class EmployeeReadDto {
     public Set<AddressDto> addresses = new HashSet<>();
     public List<PhotoReadDto> photos;
     public BadgeResponseDto badge;
-    public Date date = Date.from(Instant.now());
+    public Date date;
     public Gender gender;
 }

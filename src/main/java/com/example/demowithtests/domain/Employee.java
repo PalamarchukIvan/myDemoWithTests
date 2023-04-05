@@ -1,7 +1,9 @@
 package com.example.demowithtests.domain;
 
+import com.example.demowithtests.domain.ProjectsToEmployees.ProjectEmployee;
 import com.example.demowithtests.util.anotations.formatingAnnotations.Name;
 import com.example.demowithtests.util.anotations.formatingAnnotations.ShortenCountry;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,6 +45,8 @@ public class Employee {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "badge_id", referencedColumnName = "id")
     private Badge badge;
-    @ManyToMany(mappedBy = "employees", cascade = CascadeType.ALL)
-    private Set<Project> projects;
+    @OneToMany
+    @JoinColumn(name = "employee_id")
+    @JsonIgnore
+    private Set<ProjectEmployee> projects;
 }

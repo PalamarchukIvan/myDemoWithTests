@@ -68,7 +68,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @GetMapping("/employees")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsers() {
-        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.filterPrivateEmployees(employeeService.getAll()));
+        return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(employeeService.getAll());
     }
 
     @PatchMapping("/employees/{idEmployee}/badge/{idBadge}")
@@ -124,7 +124,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     }
 
     //Удаление по id
-    @PatchMapping("/employees/delete/{id}")
+    @DeleteMapping("/employees/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeEmployeeById(@PathVariable Integer id) {
         employeeService.removeById(id);
@@ -153,14 +153,14 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsersWithAddresses() {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
-                employeeService.filterPrivateEmployees(employeeService.findEmployeeIfAddressPresent()));
+                employeeService.findEmployeeIfAddressPresent());
     }
 
     @GetMapping("/employees/char")
     @ResponseStatus(HttpStatus.OK)
     public List<EmployeeReadDto> getAllUsersByNamePartly(@RequestParam String letters) {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
-                employeeService.filterPrivateEmployees(employeeService.findEmployeeByPartOfTheName(letters)));
+                employeeService.findEmployeeByPartOfTheName(letters));
     }
 
     @PostMapping("/employees/generation/{number}")

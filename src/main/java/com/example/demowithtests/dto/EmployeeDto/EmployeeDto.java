@@ -38,6 +38,7 @@ public class EmployeeDto {
     @JsonIgnore
     public List<PhotoDto> photos;
     public Gender gender;
+    @JsonIgnore
     public BadgeRequestDto badge;
     public Boolean isPrivate = Boolean.FALSE;
     @Password

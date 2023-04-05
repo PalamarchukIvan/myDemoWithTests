@@ -2,6 +2,10 @@ package com.example.demowithtests.service.ProjectService;
 
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Project;
+import com.example.demowithtests.domain.ProjectsToEmployees.ProjectEmployee;
+import com.example.demowithtests.domain.ProjectsToEmployees.ProjectEmployeeKey;
+import com.example.demowithtests.dto.PojectDto.ProjectResponseDto;
+import com.example.demowithtests.repository.ProjectEmployeeRepository;
 import com.example.demowithtests.repository.ProjectRepository;
 import com.example.demowithtests.service.EmployeeService.EmployeeService;
 import com.example.demowithtests.util.exception.ResourceException;
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 public class ProjectServiceBean implements ProjectService {
     private final ProjectRepository projectRepository;
     private final EmployeeService employeeService;
+    private final ProjectEmployeeRepository projectEmployeeRepository;
 
     @Override
     public Project create(Project project) {
@@ -80,7 +85,30 @@ public class ProjectServiceBean implements ProjectService {
         Employee employee = employeeService.getById(idEmployee);
         Project project = getById(idProject);
 
-        project.getEmployees().add(employee);
+        ProjectEmployee projectEmployee = ProjectEmployee.builder()
+                .key(ProjectEmployeeKey.builder()
+                        .projectId(idProject)
+                        .employeeId(idEmployee)
+                        .build())
+                .employee(employee)
+                .project(project)
+                .isActive(Boolean.TRUE)
+                .build();
+        projectEmployeeRepository.save(projectEmployee);
+        project.getEmployees().add(projectEmployee);
         return projectRepository.save(project);
+    }
+
+    @Override
+    public Project removeEmployeeFromProject(Integer idEmployee, Integer idProject) {
+        ProjectEmployee projectEmployee = projectEmployeeRepository
+                .findById(ProjectEmployeeKey.builder()
+                                .employeeId(idEmployee)
+                                .projectId(idProject)
+                                .build())
+                .orElseThrow(ResourceNotFoundException::new);
+        projectEmployee.setIsActive(Boolean.FALSE);
+        projectEmployeeRepository.save(projectEmployee);
+        return projectEmployee.getProject();
     }
 }

@@ -1,0 +1,84 @@
+-- create table public.badges
+-- (
+--     id            serial
+--         primary key,
+--     current_state varchar(255),
+--     first_name    varchar(255),
+--     is_private    boolean default false,
+--     key           varchar(255),
+--     last_name     varchar(255),
+--     position      varchar(255),
+--     previous_id   integer
+--         constraint fkb4t90hyya0h8423ikeqt8j9r1
+--             references public.badges
+-- );
+--
+-- create table public.employees
+-- (
+--     id         serial
+--         primary key,
+--     country    varchar(255),
+--     email      varchar(255),
+--     gender     varchar(255),
+--     is_private boolean default false,
+--     name       varchar(255),
+--     password   varchar(255),
+--     phone      varchar(255),
+--     badge_id   integer
+--         constraint fk2w6hpfto6jn8t28x10kfh7cgd
+--             references public.badges
+-- );
+--
+--
+-- create table public.addresses
+-- (
+--     id                 bigserial
+--         primary key,
+--     address_has_active boolean,
+--     city               varchar(255),
+--     country            varchar(255),
+--     street             varchar(255),
+--     employee_id        integer
+--         constraint fkn245yk1j248vwb8sxdcsu6eao
+--             references public.employees
+-- );
+--
+--
+-- create table public.photo
+-- (
+--     id          serial
+--         primary key,
+--     bytes       bytea,
+--     format      varchar(255),
+--     is_private  boolean default false,
+--     name        varchar(255),
+--     upload_date date,
+--     url         varchar(255),
+--     employee_id integer
+--         constraint fkrn74ulgg85vbsnip792934j84
+--             references public.employees
+-- );
+--
+-- create table public.projects
+-- (
+--     id         serial
+--         primary key,
+--     back_log   varchar(255),
+--     dead_line  date,
+--     is_private boolean,
+--     language   varchar(255),
+--     start_date date
+-- );
+--
+-- create table public.projects_employees
+-- (
+--     projects_id  integer not null
+--         constraint project_fk
+--             references public.projects,
+--     employees_id integer not null
+--         constraint employee_fk
+--             references public.employees,
+--     primary key (projects_id, employees_id)
+-- );
+--
+-- ALTER TABLE public.projects_employees ADD is_active boolean default true
