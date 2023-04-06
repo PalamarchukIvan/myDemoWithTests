@@ -39,7 +39,6 @@ public class Employee {
     private List<Photo> photos = new LinkedList<>();
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(columnDefinition = "BOOLEAN DEFAULT 'false'")//устанавливает дэфолтное значение false
     private Boolean isPrivate = Boolean.FALSE;
     private String password;
     @OneToOne(cascade = CascadeType.ALL)
@@ -47,6 +46,5 @@ public class Employee {
     private Badge badge;
     @OneToMany
     @JoinColumn(name = "employee_id")
-    @JsonIgnore
     private Set<ProjectEmployee> projects;
 }

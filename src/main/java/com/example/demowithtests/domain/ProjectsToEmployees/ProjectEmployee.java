@@ -22,7 +22,7 @@ public class ProjectEmployee {
     @MapsId("projectId")
     @JoinColumn(name = "project_id")
     private Project project;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @MapsId("employeeId")
     @JoinColumn(name = "employee_id")
     private Employee employee;

@@ -195,7 +195,6 @@ public class EmployeeServiceBean implements EmployeeService {
             Employee formerEmployee = badge.getEmployee();
             formerEmployee.setBadge(null);
             employeeRepository.save(formerEmployee);
-            badge.setEmployee(null);
         }
         employee.setBadge(badge);
         badge.setEmployee(employee);
