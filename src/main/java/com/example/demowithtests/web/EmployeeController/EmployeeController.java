@@ -44,7 +44,7 @@ public interface EmployeeController {
 
     List<EmployeeReadDto> findByCountry(String country, int page, int size, List<String> sortList, Sort.Direction sortOrder);
 
-    List<EmployeeReadDto> getAllUsersWithAddresses();
+    List<EmployeeReadDto> getAllUsersWithAddresses() throws NoSuchMethodException;
 
     List<EmployeeReadDto> getAllUsersByNamePartly(String letters);
 

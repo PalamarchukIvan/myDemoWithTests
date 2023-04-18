@@ -26,7 +26,7 @@ public interface EmployeeService {
     void removeAll();
     Page<Employee> findByCountryContaining(String country, int page, int size, List<String> sortList, String sortOrder);
 
-    List<Employee> findEmployeeIfAddressPresent();
+    List<Employee> findEmployeeIfAddressPresent() throws NoSuchMethodException;
     List<Employee> findEmployeeByPartOfTheName(String letters);
     void generateTestDatabase(int numberOfEntities);
     List<Employee> findEmployeesWithExpiredPhotos();

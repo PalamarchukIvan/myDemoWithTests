@@ -151,7 +151,7 @@ public class EmployeeControllerBean implements EmployeeControllerSwagger {
 
     @GetMapping("/employees/addresses")
     @ResponseStatus(HttpStatus.OK)
-    public List<EmployeeReadDto> getAllUsersWithAddresses() {
+    public List<EmployeeReadDto> getAllUsersWithAddresses() throws NoSuchMethodException {
         return EmployeeMapper.INSTANCE.employeeToEmployeeReadDto(
                 employeeService.findEmployeeIfAddressPresent());
     }

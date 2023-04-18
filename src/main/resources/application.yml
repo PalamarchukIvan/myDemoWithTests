@@ -19,7 +19,7 @@ spring:
     #    locations: filesystem:.\src\main\resources\db\migration
     enabled: false
     #    clean-disabled: true
-    baseline-on-migrate: true
+    baseline-on-migrate: false
 #  security:
 #    user:
 #      name: admin

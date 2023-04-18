@@ -44,7 +44,7 @@ public class Employee {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "badge_id", referencedColumnName = "id")
     private Badge badge;
-    @OneToMany
-    @JoinColumn(name = "employee_id")
+    @OneToMany(mappedBy = "employee")
+    //@JoinColumn(name = "employee_id")
     private Set<ProjectEmployee> projects;
 }

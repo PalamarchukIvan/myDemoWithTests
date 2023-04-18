@@ -95,8 +95,7 @@ public class ProjectServiceBean implements ProjectService {
                 .isActive(Boolean.TRUE)
                 .build();
         projectEmployeeRepository.save(projectEmployee);
-        project.getEmployees().add(projectEmployee);
-        return projectRepository.save(project);
+        return project;
     }
 
     @Override

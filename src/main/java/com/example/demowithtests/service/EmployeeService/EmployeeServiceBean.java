@@ -2,6 +2,7 @@ package com.example.demowithtests.service.EmployeeService;
 
 import com.example.demowithtests.domain.*;
 import com.example.demowithtests.repository.EmployeeRepository;
+import com.example.demowithtests.repository.EmployeeRepositoryEM;
 import com.example.demowithtests.service.BadgeService.BadgeService;
 import com.example.demowithtests.service.EmailService.EmailService;
 import com.example.demowithtests.util.anotations.formatingAnnotations.InitMyAnnotations;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeServiceBean implements EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final EmployeeRepositoryEM employeeRepositoryEM;
     private final EmailService emailService;
     private final BadgeService badgeService;
 
@@ -156,8 +158,8 @@ public class EmployeeServiceBean implements EmployeeService {
         return sorts;
     }
     @Override
-    public List<Employee> findEmployeeIfAddressPresent() {
-        return employeeRepository.findEmployeeByPresentAddress()
+    public List<Employee> findEmployeeIfAddressPresent() throws NoSuchMethodException {
+        return employeeRepositoryEM.findEmployeeByPresentAddress()
                 .stream()
                 .filter(employee -> !employee.getIsPrivate())
                 .collect(Collectors.toList());
@@ -165,7 +167,7 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public List<Employee> findEmployeeByPartOfTheName(String letters) {
-        return employeeRepository.findEmployeeByPartOfTheName(letters)
+        return employeeRepositoryEM.findEmployeeByPartOfTheName(letters)
                 .stream()
                 .filter(employee -> !employee.getIsPrivate())
                 .collect(Collectors.toList());

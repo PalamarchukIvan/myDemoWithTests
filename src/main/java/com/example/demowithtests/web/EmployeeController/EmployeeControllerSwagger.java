@@ -83,7 +83,7 @@ public interface EmployeeControllerSwagger extends EmployeeController{
     @Override
     @Operation(summary = "This is endpoint gets all employees with address present", description = "find all employees with addresses", tags = {"Employee"})
     @ApiResponses(value = @ApiResponse(responseCode = "200", description = "OK."))
-    List<EmployeeReadDto> getAllUsersWithAddresses();
+    List<EmployeeReadDto> getAllUsersWithAddresses() throws NoSuchMethodException;
 
     @Override
     @Operation(summary = "This is endpoint returns employees with specified name containing", description = "find employee based on name", tags = {"Employee"})

@@ -25,8 +25,8 @@ public class Project {
     private LocalDate deadLine;
     private String backLog;
     private Boolean isPrivate = Boolean.FALSE;
-    @OneToMany
-    @JoinColumn(name = "project_id")
+    @OneToMany(mappedBy = "project")
+    //@JoinColumn(name = "project_id")
     private Set<ProjectEmployee> employees;
 
     public enum Language {
