@@ -37,7 +37,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
         List<String> errors = new ArrayList<>();
         for (FieldError f : ex.getFieldErrors()) {
@@ -49,7 +48,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(FileSizeLimitExceededException.class)
-    @ResponseBody
     public ResponseEntity<?> handleFileSizeLimitExceededException(WebRequest request) {
         return new ResponseEntity<>(new ErrorDetails(new Date(),
                 "File exceeds its max size of 1048576 bytes (1 MB)",
@@ -57,7 +55,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    @ResponseBody
     public ResponseEntity<?> handleWrongFileFormatException(HttpMediaTypeNotSupportedException error, WebRequest request) {
         return new ResponseEntity<>(new ErrorDetails(new Date(),
                 error.getMessage(),
