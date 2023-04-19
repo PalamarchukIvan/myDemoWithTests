@@ -21,7 +21,7 @@ public class EmployeeRepositoryEMBean implements EmployeeRepositoryEM{
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        query.select(root).where(cb.like(root.get("name"), letters));
+        query.select(root).where(cb.like(root.get("name"), "%" + letters + "%"));
         return entityManager.createQuery(query).getResultList();
     }
 
