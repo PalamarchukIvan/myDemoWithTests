@@ -2,92 +2,89 @@ package com.example.demowithtests;
 
 import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.repository.EmployeeRepository;
-import org.assertj.core.api.Assertions;
+import com.example.demowithtests.repository.EmployeeRepositoryEMBean;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
+
+import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RepositoryTests {
-
-    @Autowired
+    @MockBean
     private EmployeeRepository employeeRepository;
+    @MockBean
+    private EmployeeRepositoryEMBean employeeRepositoryEMBean;
+
+    private static class Samples {
+        static Employee employee1 = Employee.builder()
+                .id(1)
+                .name("test name")
+                .build();
+        static Employee employee2 = Employee.builder()
+                .id(3)
+                .name("test name1")
+                .build();
+        static Employee employee3 = Employee.builder()
+                .id(3)
+                .name("test name1")
+                .build();
+    }
 
     @Test
-    @Order(1)
-    @Rollback(value = false)
     public void saveEmployeeTest() {
+        when(employeeRepository.save(Samples.employee1)).thenReturn(Samples.employee1);
 
-        Employee employee = Employee.builder().name("Mark").country("England").build();
-
-        employeeRepository.save(employee);
-
-        Assertions.assertThat(employee.getId()).isGreaterThan(0);
-        Assertions.assertThat(employee.getId()).isEqualTo(1);
+        Employee savedInstance = employeeRepository.save(Samples.employee1);
+        Assertions.assertEquals("test name", savedInstance.getName());
     }
 
     @Test
-    @Order(2)
-    public void getEmployeeTest() {
+    public void findByNameTest() {
+        employeeRepository.save(Samples.employee1);
+        when(employeeRepository.findByName(Samples.employee1.getName())).thenReturn(Samples.employee1);
 
-        Employee employee = employeeRepository.findById(1).orElseThrow();
-
-        Assertions.assertThat(employee.getId()).isEqualTo(1);
-
+        Employee foundInstance = employeeRepository.findByName(Samples.employee1.getName());
+        Assertions.assertEquals(Samples.employee1, foundInstance);
     }
 
     @Test
-    @Order(3)
-    public void getListOfEmployeeTest() {
+    public void findAllTest() {
+        Page<Employee> expected = new PageImpl<>(List.of(Samples.employee1, Samples.employee2, Samples.employee3));
+        employeeRepository.saveAll(List.of(Samples.employee1, Samples.employee2, Samples.employee3));
+        when(employeeRepository.findAll(Pageable.ofSize(5)))
+                .thenReturn(new PageImpl<>(List.of(Samples.employee1, Samples.employee2, Samples.employee3)));
 
-        List<Employee> employeesList = employeeRepository.findAll();
-
-        Assertions.assertThat(employeesList.size()).isGreaterThan(0);
-
+        Page<Employee> pagedEmployees = employeeRepository.findAll(Pageable.ofSize(5));
+        Assertions.assertEquals(expected, pagedEmployees);
     }
 
     @Test
-    @Order(4)
-    @Rollback(value = false)
-    public void updateEmployeeTest() {
+    public void findAllWithAddressesTest() {
+        List<Employee> expected = List.of(Samples.employee2);
+        employeeRepository.saveAll(List.of(Samples.employee1, Samples.employee2, Samples.employee3));
+        when(employeeRepository.findEmployeeByPresentAddress()).thenReturn(List.of(Samples.employee2));
 
-        Employee employee = employeeRepository.findById(1).get();
-
-        employee.setName("Martin");
-        Employee employeeUpdated = employeeRepository.save(employee);
-
-        Assertions.assertThat(employeeUpdated.getName()).isEqualTo("Martin");
-
+        List<Employee> result = employeeRepository.findEmployeeByPresentAddress();
+        Assertions.assertEquals(expected, result);
     }
 
     @Test
-    @Order(5)
-    @Rollback(value = false)
-    public void deleteEmployeeTest() {
+    public void findAllByPartOfTheNameEMTest() {
+        List<Employee> expected = List.of(Samples.employee2, Samples.employee3);
+        employeeRepository.saveAll(List.of(Samples.employee1, Samples.employee2, Samples.employee3));
+        when(employeeRepositoryEMBean.findEmployeeByPartOfTheName("name1")).thenReturn(List.of(Samples.employee2, Samples.employee3));
 
-        Employee employee = employeeRepository.findById(1).get();
-
-        employeeRepository.delete(employee);
-
-        //repository.deleteById(1L);
-
-        Employee employee1 = null;
-
-        Optional<Employee> optionalAuthor = Optional.ofNullable(employeeRepository.findByName("Martin"));
-
-        if (optionalAuthor.isPresent()) {
-            employee1 = optionalAuthor.get();
-        }
-
-        Assertions.assertThat(employee1).isNull();
+        List<Employee> result = employeeRepositoryEMBean.findEmployeeByPartOfTheName("name1");
+        Assertions.assertEquals(expected, result);
     }
-
 }
