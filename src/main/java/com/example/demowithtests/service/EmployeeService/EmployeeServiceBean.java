@@ -244,10 +244,6 @@ public class EmployeeServiceBean implements EmployeeService {
                 .gender((Math.random() * 2 > 1) ? Gender.M : Gender.F)
                 .isPrivate(false)
                 .password("123321")
-                .photos(List.of(Photo.builder()
-                        .uploadDate(LocalDate.now())
-                        .build()
-                ))
                 .build();
     }
 }
