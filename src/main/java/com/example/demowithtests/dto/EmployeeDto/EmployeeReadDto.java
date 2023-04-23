@@ -5,6 +5,7 @@ import com.example.demowithtests.dto.AddressDto.AddressDto;
 import com.example.demowithtests.dto.BadgeDto.BadgeResponseDto;
 import com.example.demowithtests.dto.PhotoDto.PhotoReadDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.*;
 
+@Builder
 public class EmployeeReadDto {
 
     @NotNull(message = "Name may not be null")
@@ -23,7 +25,7 @@ public class EmployeeReadDto {
     @NotNull
     public String email;
     public String phone;
-    public Set<AddressDto> addresses = new HashSet<>();
+    public Set<AddressDto> addresses;
     public List<PhotoReadDto> photos;
     public BadgeResponseDto badge;
     public Date date;
