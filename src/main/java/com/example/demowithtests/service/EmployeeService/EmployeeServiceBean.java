@@ -76,7 +76,9 @@ public class EmployeeServiceBean implements EmployeeService {
 
     @Override
     public List<Employee> findEmployeesWithExpiredPhotos() {
-        return getAll().stream().filter(employee -> employee.getPhotos()
+        return getAll().stream()
+                .filter(employee -> employee.getPhotos() != null)
+                .filter(employee -> employee.getPhotos()
                         .stream()
                         .anyMatch(photo -> photo.getUploadDate().isBefore(LocalDate.now().minusYears(5).plusDays(5)) && !photo.getIsPrivate()))
                 .collect(Collectors.toList());
@@ -116,7 +118,7 @@ public class EmployeeServiceBean implements EmployeeService {
 
                     if (employee.getPhotos() != null && !entity.getPhotos().equals(employee.getPhotos()))
                         entity.setPhotos(employee.getPhotos());
-                    if(employee.getBadge() != null && !entity.getBadge().equals(employee.getBadge()))
+                    if (employee.getBadge() != null && !entity.getBadge().equals(employee.getBadge()))
                         entity.setBadge(employee.getBadge());
                     return employeeRepository.save(entity);
                 })
@@ -157,6 +159,7 @@ public class EmployeeServiceBean implements EmployeeService {
         }
         return sorts;
     }
+
     @Override
     public List<Employee> findEmployeeIfAddressPresent() throws NoSuchMethodException {
         return employeeRepositoryEM.findEmployeeByPresentAddress()
@@ -188,12 +191,11 @@ public class EmployeeServiceBean implements EmployeeService {
     }
 
 
-
     @Override
     public Employee addBadge(Integer idEmployee, Integer idBadge) {
         Badge badge = badgeService.getById(idBadge);
         Employee employee = employeeRepository.findById(idEmployee).orElseThrow(ResourceNotFoundException::new);
-        if(badge.getEmployee() != null) {
+        if (badge.getEmployee() != null) {
             Employee formerEmployee = badge.getEmployee();
             formerEmployee.setBadge(null);
             employeeRepository.save(formerEmployee);
