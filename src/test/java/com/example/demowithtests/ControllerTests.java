@@ -52,7 +52,7 @@ public class ControllerTests {
                 .build();
         static List<EmployeeReadDto> listEmployeesDto = List.of(
                 EmployeeReadDto.builder()
-                        .name("123  ")
+                        .name("123")
                         .email("12@gmail.com")
                         .build(),
                 EmployeeReadDto.builder()

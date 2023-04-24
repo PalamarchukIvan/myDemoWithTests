@@ -71,7 +71,6 @@ public class RepositoryTests {
     @Test
     public void findAllWithAddressesTest() {
         List<Employee> expected = List.of(Samples.employee2);
-        employeeRepository.saveAll(List.of(Samples.employee1, Samples.employee2, Samples.employee3));
         when(employeeRepository.findEmployeeByPresentAddress()).thenReturn(List.of(Samples.employee2));
 
         List<Employee> result = employeeRepository.findEmployeeByPresentAddress();
@@ -81,7 +80,6 @@ public class RepositoryTests {
     @Test
     public void findAllByPartOfTheNameEMTest() {
         List<Employee> expected = List.of(Samples.employee2, Samples.employee3);
-        employeeRepository.saveAll(List.of(Samples.employee1, Samples.employee2, Samples.employee3));
         when(employeeRepositoryEMBean.findEmployeeByPartOfTheName("name1")).thenReturn(List.of(Samples.employee2, Samples.employee3));
 
         List<Employee> result = employeeRepositoryEMBean.findEmployeeByPartOfTheName("name1");
