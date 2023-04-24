@@ -14,7 +14,12 @@ services:
       - "POSTGRES_PASSWORD=postgres"
       - "POSTGRES_DB=employee"
     ports:
-      - "5432:5432"
+      - "5555:5432"
+    healthcheck:
+      test: "pg_isready -U postgres"
+      interval: 1m
+      timeout: 10s
+      retries: 5
 
   app:
     build:
@@ -25,3 +30,8 @@ services:
       - "8087:8087"
     links:
       - postgres:db
+    healthcheck:
+      test: "curl --fail http://localhost:8087/employees || exit 1"
+      interval: 1m
+      timeout: 10s
+      retries: 5

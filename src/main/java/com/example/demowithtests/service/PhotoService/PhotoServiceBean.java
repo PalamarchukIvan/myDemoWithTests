@@ -30,7 +30,7 @@ public class PhotoServiceBean implements PhotoService {
                 .format(fileName.split("\\.")[1])
                 .isPrivate(Boolean.FALSE)
                 .uploadDate(LocalDate.now())
-                .url("http://localhost:8087/api/users/photo/" + (lastPhotoId == null ? 1 : lastPhotoId + 1))
+                .url("http://localhost:8087/api/employees/photo/" + (lastPhotoId == null ? 1 : lastPhotoId + 1))
                 .bytes(file.getBytes())
                 .build());
         employeeRepository.save(employee);
