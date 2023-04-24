@@ -1,104 +1,147 @@
 package com.example.demowithtests;
 
 import com.example.demowithtests.domain.Employee;
-import com.example.demowithtests.repository.EmployeeRepository;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeForPatchDto;
+import com.example.demowithtests.dto.EmployeeDto.EmployeeReadDto;
+import com.example.demowithtests.service.EmployeeService.EmployeeServiceBean;
+import com.example.demowithtests.service.PhotoService.PhotoServiceBean;
+import com.example.demowithtests.util.config.MapStruct.EmployeeMapperImpl;
 import com.example.demowithtests.web.EmployeeController.EmployeeControllerBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.rules.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(EmployeeControllerBean.class)
 public class ControllerTests {
-
     @Autowired
-    MockMvc mockMvc;
-
+    private MockMvc mockMvc;
     @Autowired
-    ObjectMapper mapper;
-
+    private ObjectMapper mapper;
     @MockBean
-    EmployeeRepository employeeRepository;
+    private EmployeeServiceBean employeeService;
+    @MockBean
+    private PhotoServiceBean photoServiceBean;
 
-    @Ignore
+    private static class Samples {
+        static Employee employee = Employee.builder()
+                .id(1)
+                .name("Some Test Name")
+                .isPrivate(Boolean.FALSE)
+                .email("123@gmail.com")
+                .build();
+        static List<EmployeeReadDto> listEmployeesDto = List.of(
+                EmployeeReadDto.builder()
+                        .name("123  ")
+                        .email("12@gmail.com")
+                        .build(),
+                EmployeeReadDto.builder()
+                        .name("2")
+                        .email("123@gmail.com")
+                        .build()
+                , EmployeeReadDto.builder()
+                        .name("3")
+                        .email("123@gmail.com")
+                        .build()
+        );
+
+        static List<Employee> listEmployees = List.of(
+                Employee.builder()
+                        .id(1)
+                        .name("123")
+                        .email("12@gmail.com")
+                        .build(),
+                Employee.builder()
+                        .id(2)
+                        .name("2")
+                        .email("123@gmail.com")
+                        .build()
+                , Employee.builder()
+                        .id(3)
+                        .name("3")
+                        .email("123@gmail.com")
+                        .build()
+        );
+    }
+
     @Test
-    public void createEmployee_success() throws Exception {
-        Employee employee = Employee.builder()
-                .name("John")
+    @WithMockUser(roles = "ADMIN")
+    public void saveEmployeeTest() throws Exception {
+
+        EmployeeDto request = new EmployeeDto();
+        request.id = Samples.employee.getId();
+        request.name = Samples.employee.getName();
+        request.email = Samples.employee.getEmail();
+        request.isPrivate = Samples.employee.getIsPrivate();
+
+        EmployeeReadDto response = EmployeeReadDto
+                .builder()
+                .name(request.name)
+                .email(request.email)
                 .build();
 
-        Mockito.when(employeeRepository.save(employee)).thenReturn(employee);
+        when(employeeService.create(any(Employee.class))).thenReturn(Samples.employee);
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(employee));
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .post("/api/employees")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsBytes(request));
 
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.firstName", is("John")));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", is(response.name)));
     }
 
-    @Ignore
     @Test
-    public void getEmployeeById_success() throws Exception {
+    @WithMockUser(roles = "USER")
+    public void readEmployeesTest() throws Exception {
+        List<EmployeeReadDto> expected = List.copyOf(Samples.listEmployeesDto);
 
-        Employee employee = Employee.builder()
-                .name("Mark")
-                .country("France")
-                .build();
-
-        Mockito.when(employeeRepository.findById(employee.getId())).thenReturn(java.util.Optional.of(employee));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.firstName", is("Mark")));
-    }
-
-    @Ignore
-    @Test
-    public void getAllEmployees_success() throws Exception {
-
-        Employee employee = Employee.builder()
-                .name("Mark")
-                .country("France")
-                .build();
-
-        List<Employee> records = new ArrayList<>(Arrays.asList(employee));
-
-        employeeRepository.save(employee);
-
-        Mockito.when(employeeRepository.findAll()).thenReturn(records);
+        when(employeeService.getAll()).thenReturn(List.copyOf(Samples.listEmployees));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/users")
-                        .contentType(MediaType.APPLICATION_JSON))
+                    .get("/api/employees")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[2].firstName", is("Mark")));
+                .andExpect(jsonPath("$.size()", is(expected.size())));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void updateEmployeePutTest() throws Exception {
+        EmployeeReadDto expected = Samples.listEmployeesDto.get(0);
+        EmployeeForPatchDto request = new EmployeeForPatchDto();
+        request.name = "123";
+        request.email = "12@gmail.com";
+
+        when(employeeService.repostById(anyInt(), any(Employee.class))).thenReturn(List.copyOf(Samples.listEmployees).get(0));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/employees/1")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(mapper.writeValueAsBytes(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(expected.name)));
     }
 
 }
