@@ -9,7 +9,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_user_country_null
+CREATE OR REPLACE TRIGGER trigger_user_country_null
     BEFORE INSERT OR UPDATE ON employees
     FOR EACH ROW
 EXECUTE FUNCTION check_employees_country();

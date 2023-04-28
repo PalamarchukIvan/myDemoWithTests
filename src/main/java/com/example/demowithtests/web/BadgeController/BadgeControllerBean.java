@@ -4,7 +4,7 @@ import com.example.demowithtests.domain.Badge;
 import com.example.demowithtests.dto.BadgeDto.BadgeRequestDto;
 import com.example.demowithtests.dto.BadgeDto.BadgeResponseDto;
 import com.example.demowithtests.service.BadgeService.BadgeService;
-import com.example.demowithtests.util.config.MapStruct.BadgeMapper;
+import com.example.demowithtests.util.MapStruct.BadgeMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -5,11 +5,9 @@ import com.example.demowithtests.domain.Employee;
 import com.example.demowithtests.domain.Photo;
 import com.example.demowithtests.repository.BadgeRepository;
 import com.example.demowithtests.repository.EmployeeRepository;
-import com.example.demowithtests.service.BadgeService.BadgeService;
 import com.example.demowithtests.service.BadgeService.BadgeServiceBean;
 import com.example.demowithtests.service.EmailService.EmailServiceBean;
 import com.example.demowithtests.service.EmployeeService.EmployeeServiceBean;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,11 +16,11 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -85,7 +83,7 @@ public class ServiceEmployeeTests {
 
     @Test
     public void getByIdTest() {
-        when(repository.findById(1)).thenReturn(Optional.of(Samples.employee1));
+        when(repository.findById(anyInt())).thenReturn(Optional.of(Samples.employee1));
         Employee result = service.getById(1);
         Assertions.assertEquals(Samples.employee1, result);
         verify(repository).findById(1);

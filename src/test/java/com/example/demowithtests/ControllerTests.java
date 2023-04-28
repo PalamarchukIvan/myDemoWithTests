@@ -6,7 +6,6 @@ import com.example.demowithtests.dto.EmployeeDto.EmployeeForPatchDto;
 import com.example.demowithtests.dto.EmployeeDto.EmployeeReadDto;
 import com.example.demowithtests.service.EmployeeService.EmployeeServiceBean;
 import com.example.demowithtests.service.PhotoService.PhotoServiceBean;
-import com.example.demowithtests.util.config.MapStruct.EmployeeMapperImpl;
 import com.example.demowithtests.web.EmployeeController.EmployeeControllerBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

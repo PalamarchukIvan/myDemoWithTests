@@ -1,4 +1,4 @@
-create table public.badges
+create table if not exists public.badges
 (
     id            serial
         primary key,
@@ -13,7 +13,7 @@ create table public.badges
             references public.badges
 );
 
-create table public.employees
+create table if not exists public.employees
 (
     id         serial
         primary key,
@@ -29,7 +29,7 @@ create table public.employees
             references public.badges
 );
 
-create table public.addresses
+create table if not exists public.addresses
 (
     id                 bigserial
         primary key,
@@ -42,7 +42,7 @@ create table public.addresses
             references public.employees
 );
 
-create table public.photo
+create table if not exists public.photo
 (
     id          serial
         primary key,
@@ -57,7 +57,7 @@ create table public.photo
             references public.employees
 );
 
-create table public.projects
+create table if not exists public.projects
 (
     id         serial
         primary key,
@@ -68,7 +68,7 @@ create table public.projects
     start_date date
 );
 
-create table public.projects_employees
+create table if not exists public.projects_employees
 (
     employee_id integer not null
         constraint fk_projects_employees_employee

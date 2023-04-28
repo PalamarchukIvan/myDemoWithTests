@@ -1,10 +1,9 @@
 package com.example.demowithtests.web.ProjectController;
 
-import com.example.demowithtests.domain.Project;
 import com.example.demowithtests.dto.PojectDto.ProjectRequestDto;
 import com.example.demowithtests.dto.PojectDto.ProjectResponseDto;
 import com.example.demowithtests.service.ProjectService.ProjectService;
-import com.example.demowithtests.util.config.MapStruct.ProjectMapper;
+import com.example.demowithtests.util.MapStruct.ProjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

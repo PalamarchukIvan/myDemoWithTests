@@ -1,4 +1,4 @@
-package com.example.demowithtests.util.config.MapStruct;
+package com.example.demowithtests.util.MapStruct;
 
 import com.example.demowithtests.domain.Project;
 import com.example.demowithtests.domain.ProjectsToEmployees.ProjectEmployee;

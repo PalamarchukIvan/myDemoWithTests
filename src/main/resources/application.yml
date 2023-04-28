@@ -20,9 +20,9 @@ spring:
     #generate-ddl: true
   flyway:
     #    locations: filesystem:.\src\main\resources\db\migration
-    enabled: true
+    enabled: false
     #    clean-disabled: true
-    baseline-on-migrate: true
+    baseline-on-migrate: falseг
 #  security:
 #    user:
 #      name: admin
