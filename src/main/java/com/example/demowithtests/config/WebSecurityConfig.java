@@ -1,5 +1,6 @@
 package com.example.demowithtests.config;
 
+import com.example.demowithtests.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -9,9 +10,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 
@@ -22,6 +27,8 @@ import javax.sql.DataSource;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final DataSource dataSource;
+    private final UserRepository repository;
+
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -55,5 +62,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "select username, password, enabled from users where username = ?")
                 .authoritiesByUsernameQuery(
                         "select username, authority from authorities where username = ?");
+    }
+
+    @Bean
+    public UserDetailsService users() {
+        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+        if (repository.findUserByUsername("user") == null) {
+            UserDetails user = User.builder()
+                    .username("user")
+                    .password(encoder().encode("123"))
+                    .roles("USER")
+                    .build();
+            users.createUser(user);
+        }
+        if (repository.findUserByUsername("admin") == null) {
+            UserDetails admin = User.builder()
+                    .username("admin")
+                    .password(encoder().encode("123"))
+                    .roles("USER", "ADMIN")
+                    .build();
+            users.createUser(admin);
+        }
+        return users;
     }
 }
