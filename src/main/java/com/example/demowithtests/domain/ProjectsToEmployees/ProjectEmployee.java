@@ -20,11 +20,9 @@ public class ProjectEmployee {
     @ManyToOne
     @JsonIgnore
     @MapsId("projectId")
-    @JoinColumn(name = "project_id")
     private Project project;
     @ManyToOne
     @MapsId("employeeId")
-    @JoinColumn(name = "employee_id")
     private Employee employee;
     private Boolean isActive = Boolean.TRUE;
 
